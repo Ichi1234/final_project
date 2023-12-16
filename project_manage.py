@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import check, check_key, Admin
+from role_commands import Admin
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -51,6 +51,40 @@ def login():
         # returns [ID, role] if valid, otherwise returning None
 
 # define a function called exit
+def check_table():
+    table_name = input("What table do you want to change? ")
+    # table that user want to change
+    change_table = db.search(table_name)
+
+    while not change_table:  # check if table name exit in database?
+        print()
+        print(f"Database don't have {table_name} table in it please enter a valid table name.")
+        table_name = input("What table do you want to change? ")
+        print()
+        change_table = db.search(table_name)
+    return change_table
+
+def update_table(table_name, id_person, key_change, new_value):
+    # update table in database
+    table_name.update(id_person, key_change, new_value)
+    print("New value")
+    print(table_name.filter(lambda x: x[key_change] == new_value).table)
+
+
+def check(table, key, user_value):
+    for check_valid in table.table:
+        if user_value == check_valid[key]:
+            return True
+        else:
+            return False
+
+def check_key(table, key):
+    for check_keys in table.table:
+        if key not in [i for i in check_keys.keys()]:
+            return False
+        else:
+            return True
+
 def exit():
     for data in db.database:
         table_data = db.search(data.table_name)
@@ -75,7 +109,7 @@ print(val) ###TODO remove this when finish
 
 if val[1] == 'admin':
   # see and do admin related activities
-
+   print("--------------------------------------------------------------------------------------")
    admin = Admin(db)
    print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
         "\n2.See specific table in Database\n3.Change value of the table in Database."
@@ -84,45 +118,52 @@ if val[1] == 'admin':
    admin_command = input("Type command number in this line: ")
    print()
 
-   #Check what admin want to do
-   if admin_command == "1":
-       admin.all_table()
+   while admin_command != "5": #Escape from program:
+       #Check what admin want to do
+       if admin_command == "1": #user want to see every table
+           admin.all_table()
 
-   if admin_command == "2":
-       name_of_table = input("What is the table name? ")
-       admin.specific_table(name_of_table)
+       if admin_command == "2": #user want to see specific table
+           name_of_table = input("What is the table name? ")
+           admin.specific_table(name_of_table)
 
+       if admin_command == "3": #user want to change value
+           user_table = check_table()
 
-   if admin_command == "3":
-       table_name = input("What table do you want to change? ")
-       # table that user want to change
-       change_table = db.search(table_name)
+           #ID that user want to change
+           person_id = input("Please insert the person id: ")
+           while not check(user_table, "ID", person_id):
+               print("\nPlease enter a valid person ID.")
+               person_id = input("Insert the person id: ")
 
-       while not change_table: #check if table name exit in database?
-           print()
-           print(f"Database don't have {table_name} table in it please enter a valid table name.")
-           table_name = input("What table do you want to change? ")
-           print()
-           change_table = db.search(table_name)
+           #key that user want to change
+           change_key = input("\nWhat key do you want to change? ")
+           while not check_key(user_table, change_key):
+               print("\nPlease enter a valid key.")
+               change_key = input("Insert valid key: ")
 
-       #ID that user want to change
-       person_id = input("Please insert the person id: ")
-       while not check(change_table, "ID", person_id):
-           print("\nPlease enter a valid person ID.")
-           person_id = input("Insert the person id: ")
+           #new value
+           change_value = input("\nInsert new value: ")
 
-       #key that user want to change
-       change_key = input("\nWhat key do you want to change? ")
-       while not check_key(change_table, change_key):
-           print("\nPlease enter a valid key.")
-           change_key = input("Insert valid key: ")
-       #new value
-       change_value = input("\nInsert new value: ")
+           #update table in database
+           update_table(user_table, person_id, change_key, change_value)
 
-       #update table in database
-       admin.update_table(change_table, person_id, change_key, change_value)
+       if admin_command == "4": #user want to remove someone
+           remove_table = check_table() #input table
 
+           #input person_ID
+           person_id = input("Please insert the person id: ")
+           while not check(remove_table, "ID", person_id):
+               print("\nPlease enter a valid person ID.")
+               person_id = input("Insert the person id: ")
 
+           admin.remove(person_id, remove_table)
+       print("--------------------------------------------------------------------------------------")
+       print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
+             "\n2.See specific table in Database\n3.Change value of the table in Database."
+             "\n4.Remove value from Database.\n5.Exit the program.\n")
+
+       admin_command = input("Type command number in this line: ")
 
 # elif val[1] = 'student':
     # see and do student related activities
