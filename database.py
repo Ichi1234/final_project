@@ -34,7 +34,7 @@ class Database:
         csv_file = open(f"{csv_name}.csv", 'w')
         writer = csv.writer(csv_file)
 
-        writer.writerow([all_value[0].keys()])
+        writer.writerow([i for i in all_value[0].keys()])
         for dictionary in all_value:
             writer.writerow(dictionary.values())
         csv_file.close()

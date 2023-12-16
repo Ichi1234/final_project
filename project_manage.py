@@ -45,7 +45,7 @@ def login():
    # add code that performs a login task
         # ask a user for a username and password
         # returns [ID, role] if valid, otherwise returning None
-#a
+
 # define a function called exit
 def exit():
     for data in db.database:
