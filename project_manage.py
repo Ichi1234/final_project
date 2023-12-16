@@ -1,6 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
+from role_commands import check, check_key, Admin
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -71,8 +72,11 @@ print(val) ###TODO remove this when finish
 
 # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
 
+
 if val[1] == 'admin':
   # see and do admin related activities
+
+   admin = Admin(db)
    print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
         "\n2.See specific table in Database\n3.Change value of the table in Database."
          "\n4.Remove value from Database.\n5.Exit the program.\n")
@@ -82,33 +86,13 @@ if val[1] == 'admin':
 
    #Check what admin want to do
    if admin_command == "1":
-       for data in db.database:
-           table_data = db.search(data.table_name)
-           print(f"This is the data of {data.table_name} table.")
-           print(table_data.table)
-           print()
+       admin.all_table()
 
    if admin_command == "2":
        name_of_table = input("What is the table name? ")
-       if db.search(name_of_table):
-           print(f"\nThis is the data of {name_of_table} table.")
-           print(db.search(name_of_table).table)
-       else:
-           print(f"Database don't have {name_of_table} table in it please enter a valid table name.")
+       admin.specific_table(name_of_table)
 
 
-   def check(table, key, user_value): ###TODO move this to role command.py
-      for check_valid in table.table:
-          if user_value == check_valid[key]:
-             return True
-          else:
-             return False
-   def check_key(table, key): ###TODO move this to role command.py
-      for check_keys in table.table:
-         if key not in [i for i in check_keys.keys()]:
-             return False
-         else:
-             return True
    if admin_command == "3":
        table_name = input("What table do you want to change? ")
        # table that user want to change
@@ -136,9 +120,7 @@ if val[1] == 'admin':
        change_value = input("\nInsert new value: ")
 
        #update table in database
-       change_table.update(person_id, change_key, change_value)
-       print(change_table)
-
+       admin.update_table(change_table, person_id, change_key, change_value)
 
 
 
