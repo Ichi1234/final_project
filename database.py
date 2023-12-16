@@ -30,6 +30,17 @@ class Database:
              if table.table_name == table_name:
                 return table
         return None
+    def dict_to_csv(self, csv_name, all_value):
+        csv_file = open(f"{csv_name}", 'w')
+        writer = csv.writer(csv_file)
+
+        writer.writerow([all_value[0].keys()])
+        for dictionary in all_value:
+            writer.writerow(dictionary.values())
+        csv_file.close()
+        csv_file = open(f"{csv_name}", 'r')
+        print(csv_file.read())
+        csv_file.close()
 # add in code for a Table class
 class Table:
     def __init__(self, table_name, table):
