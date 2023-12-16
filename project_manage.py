@@ -23,8 +23,7 @@ def initializing():
     project_table = Table("project", [])
     advisor_pending_table = Table("advisor", [{'ProjectID' : ""
                         , 'to_be_advisor': "", 'Response': "", 'Response_date': ""}])
-    member_pending_table = Table("member", [{'ProjectID' : ""
-                        , 'to_be_member': ["9898118"], 'Response': "0/2", 'Response_date': ""}])
+    member_pending_table = Table("member", [])
     # see the guide how many tables are needed
 
     # add all these tables to the database
@@ -50,6 +49,18 @@ def check_key(table, key):
             return False
         else:
             return True
+def id_to_name(user_id):
+    login_table = db.search("login")
+    for i in login_table.table:
+        if i['ID'] == user_id:
+            return i['username']
+
+def name_to_id(user_name):
+    login_table = db.search("login")
+    for i in login_table.table:
+        if i['username'] == user_name:
+            return i['ID']
+
 def login():
 
     #ask info from user
@@ -119,7 +130,7 @@ if not val:
 print(val) ###TODO remove this when finish
 
 # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
-
+id_name = id_to_name(val[0])
 
 if val[1] == 'admin':
   # see and do admin related activities
@@ -180,7 +191,7 @@ if val[1] == 'admin':
        admin_command = input("Type command number in this line: ")
 
 elif val[1] == 'student':
-    student = Student(db, val[0])
+    student = Student(db, id_name)
     # see and do student related activities
     print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
           "\n2.Become lead (Deny all request)")
@@ -195,7 +206,14 @@ elif val[1] == 'student':
 # elif val[1] = 'member':
     # see and do member related activities
 elif val[1] == 'lead':
-    lead = Lead(db)
+
+    project_table = db.search("project")
+    project_id = ""
+    for id_of_project in project_table.table:
+        if id_of_project['Lead'] == id_name:
+            project_id = id_of_project['ProjectID']
+
+    lead = Lead(db, id_name, project_id)
     # see and do lead related activities
     print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
           "\n2.Solicit an advisor.\n3.Change value of project table in Database."
@@ -212,4 +230,4 @@ elif val[1] == 'lead':
     # see and do advisor related activities
 
 # once everything is done, make a call to the exit function
-# exit()
+exit()
