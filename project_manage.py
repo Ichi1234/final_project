@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import Admin, Student
+from role_commands import Admin, Student, Lead
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -20,8 +20,7 @@ def initializing():
 
     # login_table.update("7447677", 'password', '8887') ###TODO Test case for update method
     ###TODO make project table
-    project_table = Table("project", [{'ProjectID': "", 'Title': ""
-                , 'Lead': "", 'Member1': "", 'Member2': "", 'Advisor': "", 'Status': ""}])
+    project_table = Table("project", [])
     advisor_pending_table = Table("advisor", [{'ProjectID' : ""
                         , 'to_be_advisor': "", 'Response': "", 'Response_date': ""}])
     member_pending_table = Table("member", [{'ProjectID' : ""
@@ -188,19 +187,29 @@ elif val[1] == 'student':
     student_command = input("\nType command number in this line: ")
     print()
 
-    if student_command == "1":
-        student.pendding_request()
-    if student_command == "2":
+    if student_command == "1": # see pending requests
+        student.pending_request()
+    if student_command == "2": # become lead student
         student.evolution()
+
 # elif val[1] = 'member':
     # see and do member related activities
-# elif val[1] == 'lead':
+elif val[1] == 'lead':
+    lead = Lead(db)
     # see and do lead related activities
+    print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
+          "\n2.Solicit an advisor.\n3.Change value of project table in Database."
+          "\n4.See who responded to the request\n5.Sent member request.\n6.Sent advisor request.")
+
+    lead_command = input("\nType command number in this line: ")
+
+    if lead_command == "1":
+        pass
 
 # elif val[1] = 'faculty':
     # see and do faculty related activities
 # elif val[1] = 'advisor':
     # see and do advisor related activities
 
-# once everyhthing is done, make a call to the exit function
+# once everything is done, make a call to the exit function
 # exit()

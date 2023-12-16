@@ -1,5 +1,4 @@
-
-
+from random import randint
 
 
 class Admin:
@@ -33,7 +32,7 @@ class Student:
         self.database = database
         self.id = user_id
 
-    def pendding_request(self): ###TODO wait for project table and then change role to member and add user to project table
+    def pending_request(self): ###TODO wait for project table and then change role to member and add user to project table
         all_pending_member = self.database.search("member")
 
         print("This is all of pending request that have you in.")
@@ -84,7 +83,7 @@ class Student:
         print(all_pending_member) ###TODO delete this
 
     def evolution(self):
-        """Evolution from Student to Lead"""
+        """Evolution from Student to Lead (create project) """
 
         all_pending_member = self.database.search("member")
         login_table = self.database.search("login")
@@ -97,5 +96,23 @@ class Student:
             if self.id == change_role['ID']:
                 change_role['role'] = "lead"
 
+        #create new project
+        project_id = ""  # projectID
+        for i in range(4): project_id += str(randint(0, 9))  # add 4 digit to password variable
+        project_table = self.database.search("project")
+        title = input("What is the Project Title? ")
+        project_table.insert({'ProjectID': f"{project_id}", 'Title': f"{title}"
+                , 'Lead': f"{self.id}", 'Member1': "None",
+                'Member2': "None", 'Advisor': "None", 'Status': "Pending"})
+
+class Lead:
+    def __init__(self, database):
+        self.database = database
+    def see_pending(self):
+
+        choose = input("See pending member or advisor? (M/A): ")
+
+        if choose == "M":
+            all_pending_member = self.database.search("member")
 
 
