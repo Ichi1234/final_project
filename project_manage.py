@@ -48,11 +48,14 @@ def login():
 
 # define a function called exit
 def exit():
-    login_data = db.search('login')
-    persons_data = db.search('persons')
-
-    db.dict_to_csv('persons.csv', persons_data.table)
-    db.dict_to_csv('login.csv', login_data.table)
+    for data in db.database:
+        table_data = db.search(data.table_name)
+        db.dict_to_csv(data.table_name, table_data.table)
+    # login_data = db.search('login')
+    # persons_data = db.search('persons')
+    #
+    # db.dict_to_csv('persons.csv', persons_data.table)
+    # db.dict_to_csv('login.csv', login_data.table)
 
 # here are things to do in this function:
    # write out all the tables that have been modified to the corresponding csv files
