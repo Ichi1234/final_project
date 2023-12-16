@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import Admin
+from role_commands import Admin, Student
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -20,29 +20,52 @@ def initializing():
 
     # login_table.update("7447677", 'password', '8887') ###TODO Test case for update method
     ###TODO make project table
-    project_table = Table("project", [])
-    advisor_pending_table = Table("advisor", [])
-    member_pending_table = Table("member", [])
+    project_table = Table("project", [{'ProjectID': "", 'Title': ""
+                , 'Lead': "", 'Member1': "", 'Member2': "", 'Advisor': "", 'Status': ""}])
+    advisor_pending_table = Table("advisor", [{'ProjectID' : ""
+                        , 'to_be_advisor': "", 'Response': "", 'Response_date': ""}])
+    member_pending_table = Table("member", [{'ProjectID' : ""
+                        , 'to_be_member': ["9898118"], 'Response': "0/2", 'Response_date': ""}])
     # see the guide how many tables are needed
 
     # add all these tables to the database
     db.insert(persons_table)
     db.insert(login_table)
+    db.insert(project_table)
+    db.insert(advisor_pending_table)
+    db.insert(member_pending_table)
 
     print(login_table) ###TODO delete this when finish everything
+
+
+def check(table, key, user_value):
+    for check_valid in table.table:
+        if user_value == check_valid[key]:
+            return True
+        else:
+            return False
+
+def check_key(table, key):
+    for check_keys in table.table:
+        if key not in [i for i in check_keys.keys()]:
+            return False
+        else:
+            return True
 def login():
 
     #ask info from user
     print("Welcome to Senior project report.")
     user_name = input("What is your Username?: ")
     user_pass = input("What is your Password?: ")
+
     #pull value from database
     login_database = db.search('login')
 
     #check if user input equal to database
-    for check in login_database.table:
+    for equal in login_database.table:
        #return the value if user input correct username and password
-       if user_name == check['username'] and user_pass == check['password']: return [check['ID'], check['role']]
+       if user_name == equal['username'] and user_pass == equal['password']: return [equal['ID'], equal['role']]
+
 
 
 # here are things to do in this function:
@@ -71,20 +94,6 @@ def update_table(table_name, id_person, key_change, new_value):
     print(table_name.filter(lambda x: x[key_change] == new_value).table)
 
 
-def check(table, key, user_value):
-    for check_valid in table.table:
-        if user_value == check_valid[key]:
-            return True
-        else:
-            return False
-
-def check_key(table, key):
-    for check_keys in table.table:
-        if key not in [i for i in check_keys.keys()]:
-            return False
-        else:
-            return True
-
 def exit():
     for data in db.database:
         table_data = db.search(data.table_name)
@@ -102,6 +111,12 @@ def exit():
 
 initializing()
 val = login()
+#check is username and password correct
+if not val:
+    print("Your Username or Password is wrong. Please try again next time")
+    print('"Git Gud"')
+    sys.exit()
+
 print(val) ###TODO remove this when finish
 
 # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
@@ -165,12 +180,23 @@ if val[1] == 'admin':
 
        admin_command = input("Type command number in this line: ")
 
-# elif val[1] = 'student':
+elif val[1] == 'student':
+    student = Student(db, val[0])
     # see and do student related activities
+    print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
+          "\n2.Become lead (Deny all request)")
+    student_command = input("\nType command number in this line: ")
+    print()
+
+    if student_command == "1":
+        student.pendding_request()
+    if student_command == "2":
+        student.evolution()
 # elif val[1] = 'member':
     # see and do member related activities
-# elif val[1] = 'lead':
+# elif val[1] == 'lead':
     # see and do lead related activities
+
 # elif val[1] = 'faculty':
     # see and do faculty related activities
 # elif val[1] = 'advisor':
