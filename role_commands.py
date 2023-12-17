@@ -110,7 +110,7 @@ class Student:
 
         #create new project
         project_id = ""  # projectID
-        for i in range(4): project_id += str(randint(0, 9))  # add 4 digit to password variable
+        for i in range(7): project_id += str(randint(0, 9))  # add 4 digit to password variable
 
         title = input("What is the Project Title? ")
 
@@ -132,15 +132,18 @@ class Student:
         all_pending_advisor.insert({'ProjectID' : f"{project_id}"
                         , 'to_be_advisor': [], 'Response': [], 'Response_date': ""})
 
+        print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
+
 class Lead:
     def __init__(self, database, user_name):
         self.database = database
-        self.name = user_name
-        self.id_project = self.name_to_project()
+        self.project_table = self.database.search("project")
         self.login = self.database.search("login")
         self.all_pending_member = self.database.search("member")
         self.all_advisor_member = self.database.search("advisor")
-        self.project_table = self.database.search("project")
+        self.name = user_name
+        self.id_project = self.name_to_project()
+
 
     def name_to_project(self):
         #convert name to projectID
@@ -154,33 +157,39 @@ class Lead:
         if choose == "M":
 
             for pending_member in self.all_pending_member.table:
-                if pending_member['projectID'] == self.id_project:
-                    print(self.all_pending_member.filter(lambda x: self.id_project in x["projectID"]).table)
+                if pending_member['ProjectID'] == self.id_project:
+                    print(self.all_pending_member.filter(lambda x: self.id_project in x["ProjectID"]).table)
 
         elif choose == "A":
 
             for pending_advisor in self.all_advisor_member.table:
-               if pending_advisor['projectID'] == self.id_project:
-                   print(self.all_advisor_member.filter(lambda x: self.id_project in x["projectID"]).table)
+               if pending_advisor['ProjectID'] == self.id_project:
+                   print(self.all_advisor_member.filter(lambda x: self.id_project in x["ProjectID"]).table)
 
+    def your_project(self):
+        print(self.project_table.filter(lambda x: self.id_project in x["ProjectID"]).table)
     def solicit_or_not(self):
-        for check in self.all_pending_member:
-            if check['Response'] == "2/2" and check['projectID'] == self.id_project:
-                print("This project is ready to solicit an advisor.")
+        for check in self.all_pending_member.table:
+
+            if len(eval(check['Response'])) == 2 and check['ProjectID'] == self.id_project:
+                print("This project is ready to solicit an advisor.\n")
             else:
-                print("This project still have pending member.")
+                print("This project still have pending member.\n")
 
     def change_value_of_project(self, want):
         new_value = input("Change value to? ")
         for change in self.project_table.table:
-            if change['projectID'] == self.id_project:
+            if change['ProjectID'] == self.id_project:
                  #check if is it user project?
                  change[want] = new_value
 
     def check_responded(self):
-        for response in self.project_table.table:
-            if response['projectID'] == self.id_project:
-                print(f"This is who accept the request {response['Response']}.")
+        for response in self.all_pending_member.table:
+            if response['ProjectID'] == self.id_project:
+                if not eval(response['Response']):
+                   print("No one response your request.")
+                else:
+                   print(f"This is who accept the request {response['Response']}.")
 
     def sent_member_request(self, sent):
         for student in self.login.table:
@@ -188,9 +197,9 @@ class Lead:
                 print("This persons already has project.")
             else:
                 for invite in self.project_table.table:
-                    if invite['projectID'] == self.id_project:
+                    if invite['ProjectID'] == self.id_project:
                         for pending in self.all_pending_member.table:
-                            if len(pending['Response']) >= 2:
+                            if len(eval(pending['Response'])) >= 2:
                                 print("This project already full.")
                             else:
                                 pending['to_be_member'] = sent
@@ -201,7 +210,7 @@ class Lead:
                 print("This persons already has project.")
             else:
                 for invite in self.project_table.table:
-                    if invite['projectID'] == self.id_project:
+                    if invite['ProjectID'] == self.id_project:
                         for pending in self.all_advisor_member.table:
                             if len(pending['Response']) >= 1 and len(pending['to_be_advisor']) >= 1:
                                 print("This already has pending advisor or already full.")
