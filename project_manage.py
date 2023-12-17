@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import Admin, Student, Lead
+from role_commands import Admin, Student, Lead, Member
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -210,8 +210,33 @@ elif val[1] == 'student':
     if student_command == "2": # become lead student
         student.evolution()
 
-# elif val[1] = 'member':
+elif val[1] == 'member':
+    member = Member(db, id_name)
+    print("--------------------------------------------------------------------------------------")
     # see and do member related activities
+    print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
+          "\n2.See your project info"
+          "\n3.Change value of project table in Database"
+          "\n4.See who responded to the request.")
+    member_command = input("\nType command number in this line: ")
+
+    if member_command == "1":
+        member.see_pending()
+
+    if member_command == "2":
+        member.your_project()
+
+    if member_command == "3":
+        user_change = input("What key do you want to change? ")
+        while not check_key(db.search("project"), user_change):
+            print("\nPlease enter a valid key.")
+            user_change = input("Insert valid key: ")
+
+        member.change_value_of_project(user_change)
+
+    if member_command == "4":
+        member.check_responded()
+
 elif val[1] == 'lead':
     print("--------------------------------------------------------------------------------------")
 

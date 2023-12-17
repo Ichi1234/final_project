@@ -269,6 +269,12 @@ class Lead:
                     invite['to_be_advisor'] += sent
                     return "Request sent!"
 
+class Member(Lead):
+    def __init__(self, database, user_name):
+        super().__init__(database, user_name)
+
+
+
 
 
 
