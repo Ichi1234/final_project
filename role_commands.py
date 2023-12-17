@@ -1,3 +1,4 @@
+import sys
 from random import randint
 
 
@@ -52,7 +53,7 @@ class Student:
                 #check projectID and update respond
                 for response in all_pending_member.table:
                     if len(response['Response'].split(",")) >= 2:
-                        print("This project already max.")
+                        return "This project already max."
 
                     elif self.name in response['to_be_member'] and project_id == response['ProjectID']:
                          if response['Response'] != "":
@@ -168,6 +169,7 @@ class Student:
                         , 'to_be_advisor': "", 'Response': "", 'Response_date': ""})
 
         print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
+        sys.exit()
 
 class Lead:
     def __init__(self, database, user_name):
@@ -260,10 +262,13 @@ class Lead:
         for advisor in self.login.table:
             if advisor['username'] == sent and advisor['role'] != "faculty":
                 return "This persons already has project."
+        for member in self.all_pending_member.table:
+            if member['to_be_member'] != "":
+                return "Your Project still have pending members."
 
-        for invite in self.all_pending_member.table:
+        for invite in self.all_advisor_member.table:
              if invite['ProjectID'] == self.id_project:
-                if len(invite['Response'].split()) >= 1 and len(invite['to_be_advisor'].split()) >= 1:
+                if len(invite['Response'].split()) >= 1 or len(invite['to_be_advisor'].split()) >= 1:
                     return "This already has pending advisor or already full."
                 else:
                     invite['to_be_advisor'] += sent
@@ -283,7 +288,7 @@ class Faculty:
 
         my_pending_advisor = all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table
         if not my_pending_advisor:
-            print("No one sent you request.")
+            return  "No one sent you request."
         else:
             print("This is all of pending request that have you in.")
             print(all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table)
@@ -296,8 +301,8 @@ class Faculty:
 
                 #check projectID and update respond
                 for response in all_pending_advisor.table:
-                    if len(response['Response'].split(",")) >= 1:
-                        print("This project already max.")
+                    if project_id == response['ProjectID'] and response['Response'] != "":
+                        return "This project already max."
 
                     elif self.name in response['to_be_advisor'] and project_id == response['ProjectID']:
                          response['Response'] += self.name
@@ -311,12 +316,12 @@ class Faculty:
                              if role['username'] == self.name:
                                  role['role'] = "advisor"
 
+                         # after accept deny other project
+                         for remove_everything in all_pending_advisor.table:
+                             if self.name in remove_everything['to_be_advisor']:
+                                 remove_everything['to_be_advisor'] = ""
 
-
-                #after accept deny other project
-                for remove_everything in all_pending_advisor.table:
-                    if self.name in remove_everything['to_be_advisor']:
-                        remove_everything['to_be_advisor'] = ""
+                         return "Accepted."
 
             else:
 
@@ -337,8 +342,7 @@ class Faculty:
                         if self.name in deny['to_be_advisor'] and project_id == deny['ProjectID']:
                             deny['to_be_advisor'] = ""
 
-
-
+                return ""
 
 
 

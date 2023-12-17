@@ -199,16 +199,24 @@ if val[1] == 'admin':
 
 elif val[1] == 'student':
     student = Student(db, id_name)
+    print("--------------------------------------------------------------------------------------")
     # see and do student related activities
     print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
-          "\n2.Become lead (Deny all request)")
+          "\n2.Become lead (Deny all request)"
+          "\n0.Exit Program")
     student_command = input("\nType command number in this line: ")
     print()
+    while student_command != "0":
+        if student_command == "1": # see pending requests
+            student.pending_request()
+        if student_command == "2": # become lead student
+            student.evolution()
 
-    if student_command == "1": # see pending requests
-        student.pending_request()
-    if student_command == "2": # become lead student
-        student.evolution()
+        print("--------------------------------------------------------------------------------------")
+        print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
+              "\n2.Become lead (Deny all request)"
+              "\n0.Exit Program")
+        student_command = input("\nType command number in this line: ")
 
 elif val[1] == 'member':
     member = Member(db, id_name)
@@ -219,23 +227,36 @@ elif val[1] == 'member':
           "\n3.Change value of project table in Database"
           "\n4.See who responded to the request.")
     member_command = input("\nType command number in this line: ")
+    print()
 
-    if member_command == "1":
-        member.see_pending()
+    while member_command != "0":
 
-    if member_command == "2":
-        member.your_project()
+        if member_command == "1":
+            member.see_pending()
 
-    if member_command == "3":
-        user_change = input("What key do you want to change? ")
-        while not check_key(db.search("project"), user_change):
-            print("\nPlease enter a valid key.")
-            user_change = input("Insert valid key: ")
+        if member_command == "2":
+            member.your_project()
 
-        member.change_value_of_project(user_change)
+        if member_command == "3":
+            user_change = input("What key do you want to change? ")
+            while not check_key(db.search("project"), user_change):
+                print("\nPlease enter a valid key.")
+                user_change = input("Insert valid key: ")
 
-    if member_command == "4":
-        member.check_responded()
+            member.change_value_of_project(user_change)
+
+        if member_command == "4":
+            member.check_responded()
+
+        print("--------------------------------------------------------------------------------------")
+        # see and do member related activities
+        print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
+              "\n2.See your project info"
+              "\n3.Change value of project table in Database"
+              "\n4.See who responded to the request."
+              "\n0.Exit the Program")
+
+        member_command = input("\nType command number in this line: ")
 
 elif val[1] == 'lead':
     print("--------------------------------------------------------------------------------------")
@@ -281,10 +302,10 @@ elif val[1] == 'lead':
 
         if lead_command == "6": # sent advisor request
 
-            sent = input("What is the personID you want to sent request.")
+            sent = input("What is the personID you want to sent request? ")
             while not check(db.search("login"), "ID", sent):
                 print("\nInvalid personID")
-                sent = input("Type correct ID")
+                sent = input("Type correct ID ")
             name_of_id = id_to_name(sent)
             print(lead.sent_advisor_request(name_of_id))
 
@@ -310,14 +331,10 @@ elif val[1] == 'faculty':
 
     faculty_command = input("\nType command number in this line: ")
 
-    while faculty_command != "0":
-        if faculty_command == "1":
-            faculty.pending_request()
 
-        print("--------------------------------------------------------------------------------------")
-        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
-              "\n0.Exit the program")
-        faculty_command = input("\nType command number in this line: ")
+    if faculty_command == "1":
+        print(faculty.pending_request())
+
 
 # elif val[1] = 'advisor':
     # see and do advisor related activities
