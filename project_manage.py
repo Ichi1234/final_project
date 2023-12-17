@@ -213,6 +213,7 @@ elif val[1] == 'student':
 # elif val[1] = 'member':
     # see and do member related activities
 elif val[1] == 'lead':
+    print("--------------------------------------------------------------------------------------")
 
     lead = Lead(db, id_name)
     # see and do lead related activities
@@ -220,51 +221,60 @@ elif val[1] == 'lead':
           "\n2.See your project info."
           "\n3.Check if your project ready to solicit an advisor."
           "\n4.Change value of project table in Database."
-          "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request.")
+          "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+          "\n8.Exit the Program")
 
     lead_command = input("\nType command number in this line: ")
+    while lead_command != "8":  # Escape from program:
 
-    if lead_command == "1": # see pending request
-        lead.see_pending()
+        if lead_command == "1": # see pending request
+            lead.see_pending()
 
-    if lead_command == "2": # see your project detail
-        lead.your_project()
+        if lead_command == "2": # see your project detail
+            lead.your_project()
 
-    if lead_command == "3": # is project ready to solicit an advisor
-        lead.solicit_or_not()
+        if lead_command == "3": # is project ready to solicit an advisor
+            lead.solicit_or_not()
 
-    if lead_command == "4": # change value in project table
-        user_change = input("What key do you want to change? ")
-        while not check_key(db.search("project"), user_change):
-            print("\nPlease enter a valid key.")
-            user_change = input("Insert valid key: ")
+        if lead_command == "4": # change value in project table
+            user_change = input("What key do you want to change? ")
+            while not check_key(db.search("project"), user_change):
+                print("\nPlease enter a valid key.")
+                user_change = input("Insert valid key: ")
 
-        lead.change_value_of_project(user_change)
-
-
-    if lead_command == "5": # sent member request
-
-        sent = input("What is the personID you want to sent request? ")
-        while not check(db.search("login"), "ID", sent):
-            print("\nInvalid personID")
-            sent = input("Type correct ID ")
-        name_of_id = id_to_name(sent)
-        lead.sent_member_request(name_of_id)
-
-    if lead_command == "6": # sent advisor request
-
-        sent = input("What is the personID you want to sent request.")
-        while not check(db.search("login"), "ID", sent):
-            print("\nInvalid personID")
-            sent = input("Type correct ID")
-        name_of_id = id_to_name(sent)
-        lead.sent_advisor_request(name_of_id)
-
-    if lead_command == "7": # see who respond the request
-        lead.check_responded()
+            lead.change_value_of_project(user_change)
 
 
+        if lead_command == "5": # sent member request
 
+            sent = input("What is the personID you want to sent request? ")
+            while not check(db.search("login"), "ID", sent):
+                print("\nInvalid personID")
+                sent = input("Type correct ID ")
+            name_of_id = id_to_name(sent) ###TODO fix this shit
+            print(lead.sent_member_request(name_of_id))
+
+        if lead_command == "6": # sent advisor request
+
+            sent = input("What is the personID you want to sent request.")
+            while not check(db.search("login"), "ID", sent):
+                print("\nInvalid personID")
+                sent = input("Type correct ID")
+            name_of_id = id_to_name(sent)
+            lead.sent_advisor_request(name_of_id)
+
+        if lead_command == "7": # see who respond the request
+            lead.check_responded()
+        print("--------------------------------------------------------------------------------------")
+
+
+        print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
+              "\n2.See your project info."
+              "\n3.Check if your project ready to solicit an advisor."
+              "\n4.Change value of project table in Database."
+              "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+              "\n8.Exit the Program")
+        lead_command = input("Type command number in this line: ")
 
 # elif val[1] = 'faculty':
     # see and do faculty related activities

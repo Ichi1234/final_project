@@ -51,17 +51,34 @@ class Student:
 
                 #check projectID and update respond
                 for response in all_pending_member.table:
-                    if len(response['Response']) >= 2:
+                    if len(response['Response'].split(",")) >= 2:
                         print("This project already max.")
 
                     elif self.name in response['to_be_member'] and project_id == response['ProjectID']:
-                         response['Response'].append(self.name) #accept move name to response
+                         if response['Response'] == "":
+                            response['Response'] += self.name + "," #accept move name to response
+                         else:
+                            response['Response'] += self.name
+
+                         # add name of member to project table
+                         for member in self.database.search("project").table:
+                             if member['Member1'] != "None":
+                                 member['Member1'] = self.name
+                             else:
+                                 member['Member2'] = self.name
+
 
 
                 #after accept deny other project
                 for remove_everything in all_pending_member.table:
                     if self.name in remove_everything['to_be_member']:
-                        remove_everything['to_be_member'].remove(self.name)
+                        if "," in remove_everything['to_be_member']:
+                            new = (remove_everything['to_be_member'].replace
+                                   (self.name, "").replace(",", ""))
+                            remove_everything['to_be_member'] = new
+                        else:
+                            new = remove_everything['to_be_member'].replace(self.name, "")
+                            remove_everything['to_be_member'] = new
 
             else:
 
@@ -70,8 +87,14 @@ class Student:
                 #delete every thing
                 if everything == "Y":
                     for remove_everything in all_pending_member.table:
-                        if self.name in remove_everything['to_be_member']:
-                            remove_everything['to_be_member'].remove(self.name)
+                        if "," in remove_everything['to_be_member']:
+                           new = (remove_everything['to_be_member'].replace
+                                  (self.name, "").replace(",", ""))
+                           remove_everything['to_be_member'] = new
+
+                        else:
+                            new =remove_everything['to_be_member'].replace(self.name, "")
+                            remove_everything['to_be_member'] = new
 
                 #delete only specific project
                 elif everything == "N":
@@ -79,7 +102,13 @@ class Student:
 
                     for deny in all_pending_member.table:
                         if self.name in deny['to_be_member'] and project_id == deny['ProjectID']:
-                            deny['to_be_member'].remove(self.name)
+                            if "," in deny['to_be_member']:
+                                new = deny['to_be_member'].replace(self.name, "").replace(",", "")
+                                deny['to_be_member'] = new
+
+                            else:
+                                new = deny['to_be_member'].replace(self.name, "")
+                                deny['to_be_member'] = new
 
 
             print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table) ###TODO delete this
@@ -102,7 +131,8 @@ class Student:
 
         for remove_everything in all_pending_member.table:
             if self.name in remove_everything['to_be_member']:
-                remove_everything['to_be_member'].remove(self.name)
+                new = remove_everything['to_be_member'].replace(self.name, "").replace(",", "")
+                remove_everything['to_be_member'] = new
 
         for change_role in login_table.table:
             if self.name == change_role['ID']:
@@ -126,11 +156,11 @@ class Student:
 
         # insert new value to pending_member table
         all_pending_member.insert({'ProjectID' : f"{project_id}"
-                        , 'to_be_member': [], 'Response': [], 'Response_date': ""})
+                        , 'to_be_member': "", 'Response': "", 'Response_date': ""})
 
         #insert new value to pending_advisor table
         all_pending_advisor.insert({'ProjectID' : f"{project_id}"
-                        , 'to_be_advisor': [], 'Response': [], 'Response_date': ""})
+                        , 'to_be_advisor': "", 'Response': "", 'Response_date': ""})
 
         print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
 
@@ -171,7 +201,7 @@ class Lead:
     def solicit_or_not(self):
         for check in self.all_pending_member.table:
 
-            if len(eval(check['Response'])) == 2 and check['ProjectID'] == self.id_project:
+            if len(check['Response'].split(",")) == 2 and check['ProjectID'] == self.id_project:
                 print("This project is ready to solicit an advisor.\n")
             else:
                 print("This project still have pending member.\n")
@@ -186,7 +216,7 @@ class Lead:
     def check_responded(self):
         for response in self.all_pending_member.table:
             if response['ProjectID'] == self.id_project:
-                if not eval(response['Response']):
+                if response['Response'] == "":
                    print("No one response your request.")
                 else:
                    print(f"This is who accept the request {response['Response']}.")
@@ -196,15 +226,20 @@ class Lead:
             if student['username'] == sent and student['role'] != "student":
                 print("This persons already has project.")
             else:
-                for invite in self.project_table.table:
-                    if invite['ProjectID'] == self.id_project:
-                        for pending in self.all_pending_member.table:
-                            if len(eval(pending['Response'])) >= 2:
-                                print("This project already full.")
-                            else:
-                                pending['to_be_member'].append(sent)
+               for pending in self.all_pending_member.table:
+                   if pending['ProjectID'] == self.id_project:
+                        if "," in pending['Response']:
+                            if len(pending['Response'].split(",")) >= 2: #check if user project full
+                                return "This project already full."
 
-    def sent_advisor_request(self, sent):
+                            else:
+                                pending['to_be_member'] += sent + ","
+                                return "Request sent!"
+                        else:
+                            pending['to_be_member'] += sent + ","
+                            return "Request sent!"
+
+    def sent_advisor_request(self, sent): ###TODO update to new value
         for advisor in self.login.table:
             if advisor['username'] == sent and advisor['role'] != "faculty":
                 print("This persons already has project.")
