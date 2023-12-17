@@ -251,7 +251,7 @@ elif val[1] == 'lead':
             while not check(db.search("login"), "ID", sent):
                 print("\nInvalid personID")
                 sent = input("Type correct ID ")
-            name_of_id = id_to_name(sent) ###TODO fix this shit
+            name_of_id = id_to_name(sent)
             print(lead.sent_member_request(name_of_id))
 
         if lead_command == "6": # sent advisor request

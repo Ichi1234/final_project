@@ -233,10 +233,14 @@ class Lead:
                                 return "This project already full."
 
                             else:
-                                pending['to_be_member'] += sent + ","
+                                pending['to_be_member'] += sent
                                 return "Request sent!"
                         else:
-                            pending['to_be_member'] += sent + ","
+                            if pending['to_be_member'] == "":
+                                pending['to_be_member'] += sent + ","
+                            else:
+                                pending['to_be_member'] += "," + sent
+
                             return "Request sent!"
 
     def sent_advisor_request(self, sent): ###TODO update to new value
