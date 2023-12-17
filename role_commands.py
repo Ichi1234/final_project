@@ -33,7 +33,7 @@ class Student:
         self.name = name
 
 
-    def pending_request(self): ###TODO wait for project table and then change role to member and add user to project table
+    def pending_request(self):
         all_pending_member = self.database.search("member")
 
         my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
@@ -273,6 +273,69 @@ class Member(Lead):
     def __init__(self, database, user_name):
         super().__init__(database, user_name)
 
+class Faculty:
+    def __init__(self, database, name):
+        self.database = database
+        self.name = name
+
+    def pending_request(self):
+        all_pending_advisor = self.database.search("advisor")
+
+        my_pending_advisor = all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table
+        if not my_pending_advisor:
+            print("No one sent you request.")
+        else:
+            print("This is all of pending request that have you in.")
+            print(all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table)
+
+            advisor_choice = input("Do you want to 'Accept' or 'Deny'? ")
+
+            if advisor_choice == "Accept":
+
+                project_id = input("Input projectID that you want to accept: ")
+
+                #check projectID and update respond
+                for response in all_pending_advisor.table:
+                    if len(response['Response'].split(",")) >= 1:
+                        print("This project already max.")
+
+                    elif self.name in response['to_be_advisor'] and project_id == response['ProjectID']:
+                         response['Response'] += self.name
+
+                         # add name of advisor to project table
+                         for advisor in self.database.search("project").table:
+                              advisor['Advisor'] = self.name
+
+                        # change role to advisor
+                         for role in self.database.search("login").table:
+                             if role['username'] == self.name:
+                                 role['role'] = "advisor"
+
+
+
+                #after accept deny other project
+                for remove_everything in all_pending_advisor.table:
+                    if self.name in remove_everything['to_be_advisor']:
+                        remove_everything['to_be_advisor'] = ""
+
+            else:
+
+                everything = input("Do you want to 'Deny' every project (Y/N): ")
+
+                #delete every thing
+                if everything == "Y":
+                    for remove_everything in all_pending_advisor.table:
+                        if self.name in remove_everything['to_be_advisor']:
+                            remove_everything['to_be_advisor'] = ""
+
+
+                #delete only specific project
+                elif everything == "N":
+                    project_id = input("Input projectID that you want to deny: ")
+
+                    for deny in all_pending_advisor.table:
+                        if self.name in deny['to_be_advisor'] and project_id == deny['ProjectID']:
+                            deny['to_be_advisor'] = ""
 
 
 

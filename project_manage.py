@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import Admin, Student, Lead, Member
+from role_commands import Admin, Student, Lead, Member, Faculty
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -132,7 +132,7 @@ if not val:
     print('"Git Gud"')
     sys.exit()
 
-print(val) ###TODO remove this when finish
+
 
 # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
 id_name = id_to_name(val[0])
@@ -301,8 +301,24 @@ elif val[1] == 'lead':
               "\n0.Exit the Program")
         lead_command = input("Type command number in this line: ")
 
-# elif val[1] = 'faculty':
+elif val[1] == 'faculty':
+    faculty = Faculty(db, id_name)
     # see and do faculty related activities
+    print("--------------------------------------------------------------------------------------")
+    print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+          "\n0.Exit the program")
+
+    faculty_command = input("\nType command number in this line: ")
+
+    while faculty_command != "0":
+        if faculty_command == "1":
+            faculty.pending_request()
+
+        print("--------------------------------------------------------------------------------------")
+        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+              "\n0.Exit the program")
+        faculty_command = input("\nType command number in this line: ")
+
 # elif val[1] = 'advisor':
     # see and do advisor related activities
 
