@@ -1,7 +1,7 @@
 # import database module
 import sys
 from database import Database, Table, Read
-from role_commands import Admin, Student, Lead, Member, Faculty
+from role_commands import Admin, Student, Lead, Member, Faculty, Advisor
 from random import randint
 # define a funcion called initializing
 db = Database()
@@ -208,9 +208,11 @@ elif val[1] == 'student':
     print()
     while student_command != "0":
         if student_command == "1": # see pending requests
-            student.pending_request()
+            student.pending_request(exit)
         if student_command == "2": # become lead student
             student.evolution()
+            exit()
+            sys.exit()
 
         print("--------------------------------------------------------------------------------------")
         print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
@@ -268,6 +270,8 @@ elif val[1] == 'lead':
           "\n3.Check if your project ready to solicit an advisor."
           "\n4.Change value of project table in Database."
           "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+          "\n8.Sent Proposal."
+          "\n9.Sent Completed Project."
           "\n0.Exit the Program")
 
     lead_command = input("\nType command number in this line: ")
@@ -310,7 +314,13 @@ elif val[1] == 'lead':
             print(lead.sent_advisor_request(name_of_id))
 
         if lead_command == "7": # see who respond the request
-            lead.check_responded()
+             lead.check_responded()
+
+        if lead_command == "8": # sent proposal
+             lead.sent_project_to_advisor("Pending Proposal")
+
+        if lead_command == "9": # sent complete project
+             lead.sent_project_to_advisor("Pending")
         print("--------------------------------------------------------------------------------------")
 
 
@@ -327,17 +337,45 @@ elif val[1] == 'faculty':
     # see and do faculty related activities
     print("--------------------------------------------------------------------------------------")
     print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+          "\n2.See details of all project."
           "\n0.Exit the program")
 
     faculty_command = input("\nType command number in this line: ")
 
+    while faculty_command != "0":
 
-    if faculty_command == "1":
-        print(faculty.pending_request())
+        if faculty_command == "1":
+            print(faculty.pending_request(exit))
 
+        if faculty_command == "2":
+            print(faculty.all_project())
 
-# elif val[1] = 'advisor':
+        print("--------------------------------------------------------------------------------------")
+        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+              "\n2.See details of all project."
+              "\n0.Exit the program")
+        faculty_command = input("\nType command number in this line: ")
+
+elif val[1] == 'advisor':
+    advisor = Advisor(db, id_name)
     # see and do advisor related activities
+    print("--------------------------------------------------------------------------------------")
+    print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+          "\n2.See details of your project."
+          "\n3.See pending request."
+          "\n4.See Student Question."
+          "\n0.Exit the program")
+
+    advisor_command = input("\nType command number in this line: ")
+
+    if advisor_command == "1":
+        print(advisor.all_project())
+
+    if advisor_command == "2":
+        advisor.specific_project()
+
+    if advisor_command == "3":
+        advisor.pending()
 
 # once everything is done, make a call to the exit function
 exit()

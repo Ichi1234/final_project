@@ -34,7 +34,7 @@ class Student:
         self.name = name
 
 
-    def pending_request(self):
+    def pending_request(self, dict_to_csv):
         all_pending_member = self.database.search("member")
 
         my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
@@ -73,18 +73,19 @@ class Student:
                             if role['username'] == self.name:
                                 role['role'] = "member"
 
+                         #after accept deny other project
+                         for remove_everything in all_pending_member.table:
+                            if self.name in remove_everything['to_be_member']:
+                                if "," in remove_everything['to_be_member']:
+                                    new = (remove_everything['to_be_member'].replace
+                                           (self.name, "").replace(",", ""))
+                                    remove_everything['to_be_member'] = new
+                                else:
+                                    new = remove_everything['to_be_member'].replace(self.name, "")
+                                    remove_everything['to_be_member'] = new
 
-
-                #after accept deny other project
-                for remove_everything in all_pending_member.table:
-                    if self.name in remove_everything['to_be_member']:
-                        if "," in remove_everything['to_be_member']:
-                            new = (remove_everything['to_be_member'].replace
-                                   (self.name, "").replace(",", ""))
-                            remove_everything['to_be_member'] = new
-                        else:
-                            new = remove_everything['to_be_member'].replace(self.name, "")
-                            remove_everything['to_be_member'] = new
+                         dict_to_csv()
+                         sys.exit()
 
             else:
 
@@ -158,7 +159,7 @@ class Student:
         #insert new value to project table
         project_table.insert({'ProjectID': f"{project_id}", 'Title': f"{title}"
                 , 'Lead': f"{self.name}", 'Member1': "None",
-                'Member2': "None", 'Advisor': "None", 'Status': "Pending"})
+                'Member2': "None", 'Advisor': "None", 'Status': "Ongoing"})
 
         # insert new value to pending_member table
         all_pending_member.insert({'ProjectID' : f"{project_id}"
@@ -169,7 +170,7 @@ class Student:
                         , 'to_be_advisor': "", 'Response': "", 'Response_date': ""})
 
         print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
-        sys.exit()
+
 
 class Lead:
     def __init__(self, database, user_name):
@@ -273,6 +274,11 @@ class Lead:
                 else:
                     invite['to_be_advisor'] += sent
                     return "Request sent!"
+    def sent_project_to_advisor(self, new_status):
+         # change project status
+         for sent in self.project_table.table:
+              if sent['Lead'] == self.name:
+                  sent['Status'] = new_status
 
 class Member(Lead):
     def __init__(self, database, user_name):
@@ -283,7 +289,7 @@ class Faculty:
         self.database = database
         self.name = name
 
-    def pending_request(self):
+    def pending_request(self, exit_function):
         all_pending_advisor = self.database.search("advisor")
 
         my_pending_advisor = all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table
@@ -321,7 +327,9 @@ class Faculty:
                              if self.name in remove_everything['to_be_advisor']:
                                  remove_everything['to_be_advisor'] = ""
 
-                         return "Accepted."
+                         print("Accepted.")
+                         exit_function() #tranform dict to csv
+                         sys.exit()
 
             else:
 
@@ -333,7 +341,6 @@ class Faculty:
                         if self.name in remove_everything['to_be_advisor']:
                             remove_everything['to_be_advisor'] = ""
 
-
                 #delete only specific project
                 elif everything == "N":
                     project_id = input("Input projectID that you want to deny: ")
@@ -344,5 +351,26 @@ class Faculty:
 
                 return ""
 
+    def all_project(self):
+        return self.database.search("project")
 
+class Advisor:
+    def __init__(self, database, user_name):
+        self.name = user_name
+        self.database = database
+        self.project_table = self.database.search("project")
+    def all_project(self):
+        return self.project_table
 
+    def specific_project(self):
+        print(self.project_table.filter(lambda x: self.name in x["Advisor"]).table)
+
+    def pending(self):
+        for approve in self.project_table.table:
+             if self.name in approve["Advisor"]:
+                 # check approve status
+                 if approve["Status"] == "Pending Proposal":
+                      approve["Status"] = "Complete Proposal"
+
+                 elif approve["Status"] == "Pending":
+                      approve["Status"] = "Complete"
