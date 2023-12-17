@@ -34,7 +34,7 @@ class Student:
         self.name = name
 
 
-    def pending_request(self, dict_to_csv):
+    def pending_request(self, dict_to_csv, time):
         all_pending_member = self.database.search("member")
 
         my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
@@ -68,21 +68,29 @@ class Student:
                              else:
                                  member['Member2'] = self.name
 
-                        # change role to member
+                         # change role to member
                          for role in self.database.search("login").table:
                             if role['username'] == self.name:
                                 role['role'] = "member"
 
-                         #after accept deny other project
+                         # add date time to date response
+                         for date in all_pending_member.table:
+                             if self.name in date['to_be_member'].split(","):
+                                 if date['Response_date'] == "":
+                                    date['Response_date'] += str(time.today())
+                                 else:
+                                    date['Response_date'] += "," + str(time.today())
+
+                         # after accept deny other project
                          for remove_everything in all_pending_member.table:
                             if self.name in remove_everything['to_be_member']:
-                                if "," in remove_everything['to_be_member']:
-                                    new = (remove_everything['to_be_member'].replace
+
+                               #remove user
+                               new = (remove_everything['to_be_member'].replace
                                            (self.name, "").replace(",", ""))
-                                    remove_everything['to_be_member'] = new
-                                else:
-                                    new = remove_everything['to_be_member'].replace(self.name, "")
-                                    remove_everything['to_be_member'] = new
+
+                               remove_everything['to_be_member'] = new
+
 
                          dict_to_csv()
                          sys.exit()
@@ -136,6 +144,9 @@ class Student:
         #project table
         project_table = self.database.search("project")
 
+        #advisor_ask_table
+        advisor_ask = self.database.search("question")
+
         for remove_everything in all_pending_member.table:
             if self.name in remove_everything['to_be_member']:
                 new = remove_everything['to_be_member'].replace(self.name, "").replace(",", "")
@@ -169,16 +180,24 @@ class Student:
         all_pending_advisor.insert({'ProjectID' : f"{project_id}"
                         , 'to_be_advisor': "", 'Response': "", 'Response_date': ""})
 
+        #insert new value to question table
+        advisor_ask.insert({'ProjectID': f"{project_id}", 'Lead': f"{self.name}",
+                            'Question': "", 'Reply': "", 'Pending': "0", 'Advisor': ""})
+
         print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
 
 
 class Lead:
     def __init__(self, database, user_name):
         self.database = database
+
+        #table
         self.project_table = self.database.search("project")
         self.login = self.database.search("login")
         self.all_pending_member = self.database.search("member")
         self.all_advisor_member = self.database.search("advisor")
+        self.question = self.database.search("question")
+
         self.name = user_name
         self.id_project = self.name_to_project()
 
@@ -250,10 +269,10 @@ class Lead:
                         pending['to_be_member'] = f"{pending['to_be_member']},{sent}" if pending['to_be_member'] else sent
                         return "Request sent!"
                 else:
-                    if pending['to_be_member'] == "":
-                        pending['to_be_member'] += sent
-                    else:
+                    if pending['to_be_member'] != "":
                         pending['to_be_member'] += "," + sent
+                    else:
+                        pending['to_be_member'] += sent
 
                     return "Request sent!"
 
@@ -274,11 +293,26 @@ class Lead:
                 else:
                     invite['to_be_advisor'] += sent
                     return "Request sent!"
-    def sent_project_to_advisor(self, new_status):
+    def sent_project_to_advisor(self):
          # change project status
          for sent in self.project_table.table:
               if sent['Lead'] == self.name:
-                  sent['Status'] = new_status
+                  sent['Status'] = "Pending"
+
+    def ask_advisor(self):
+        user_question = input("Insert your question. ")
+        for question in self.question.table:
+            if question['Lead'] == self.name:
+               question['Question'] = user_question
+
+    def see_reply(self):
+        for question in self.question.table:
+            if question['Lead'] == self.name:
+               if question['Reply'] == "":
+                   print("Advisor still not answer your question.")
+               else:
+                   print(f"Your question is {question['Question']}.")
+                   print(f"This is the answer {question['Reply']}")
 
 class Member(Lead):
     def __init__(self, database, user_name):
@@ -317,6 +351,10 @@ class Faculty:
                          for advisor in self.database.search("project").table:
                               advisor['Advisor'] = self.name
 
+                         # add name of advisor to question table
+                         for add_advisor in self.database.search("question").table:
+                              add_advisor['Advisor'] = self.name
+
                         # change role to advisor
                          for role in self.database.search("login").table:
                              if role['username'] == self.name:
@@ -326,6 +364,7 @@ class Faculty:
                          for remove_everything in all_pending_advisor.table:
                              if self.name in remove_everything['to_be_advisor']:
                                  remove_everything['to_be_advisor'] = ""
+
 
                          print("Accepted.")
                          exit_function() #tranform dict to csv
@@ -359,6 +398,7 @@ class Advisor:
         self.name = user_name
         self.database = database
         self.project_table = self.database.search("project")
+        self.question = self.database.search("question")
     def all_project(self):
         return self.project_table
 
@@ -366,11 +406,34 @@ class Advisor:
         print(self.project_table.filter(lambda x: self.name in x["Advisor"]).table)
 
     def pending(self):
+        new_status = ""
+        for pending in self.question.table:
+            if pending['Lead'] == self.name:
+                if pending['Pending'] == "0":
+                    new_status = "Proposal Approve"
+                    increase = int(pending['Pending'])
+                    increase += 1
+                    pending['Pending'] = str(increase)
+
+                elif pending['Pending'] == "1":
+                    new_status = "Complete"
+
         for approve in self.project_table.table:
              if self.name in approve["Advisor"]:
                  # check approve status
-                 if approve["Status"] == "Pending Proposal":
-                      approve["Status"] = "Complete Proposal"
+                 approve["Status"] = new_status
 
-                 elif approve["Status"] == "Pending":
-                      approve["Status"] = "Complete"
+    def reply_question(self):
+        for reply in self.question.table:
+             if reply['Advisor'] == self.name:
+                 if reply['Question'] != "":
+                    print(reply['Question'])
+                 else:
+                    print("Student didn't ask your question.")
+
+                 answer = input("Do you want to reply? (Y/N): ")
+                 if answer == "Y":
+                     insert = input("Insert your answer. ")
+                     reply['Reply'] = insert
+
+

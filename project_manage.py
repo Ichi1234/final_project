@@ -2,11 +2,13 @@
 import sys
 from database import Database, Table, Read
 from role_commands import Admin, Student, Lead, Member, Faculty, Advisor
+from datetime import date
 from random import randint
-# define a funcion called initializing
+# define a function called initializing
 db = Database()
 read = Read()
-# define a funcion called initializing
+
+# define a function called initializing
 
 def initializing():
 
@@ -16,15 +18,16 @@ def initializing():
     project_csv = read.input_csv_file("project.csv")
     member_csv = read.input_csv_file("member.csv")
     advisor_csv = read.input_csv_file("advisor.csv")
+    advisor_response_csv = read.input_csv_file("question.csv")
 
     # create all the corresponding tables for those csv files
     persons_table = Table('persons', person_csv)
     login_table = Table('login', login_csv)
 
-    # login_table.update("7447677", 'password', '8887') ###TODO Test case for update method
-    ###TODO make project table
+
     project_table = Table("project", project_csv)
     advisor_pending_table = Table("advisor", advisor_csv)
+    advisor_response_table = Table("question", advisor_response_csv)
     member_pending_table = Table("member", member_csv)
     # see the guide how many tables are needed
 
@@ -34,6 +37,7 @@ def initializing():
     db.insert(project_table)
     db.insert(advisor_pending_table)
     db.insert(member_pending_table)
+    db.insert(advisor_response_table)
 
     print(login_table) ###TODO delete this when finish everything
 
@@ -208,7 +212,7 @@ elif val[1] == 'student':
     print()
     while student_command != "0":
         if student_command == "1": # see pending requests
-            student.pending_request(exit)
+            student.pending_request(exit, date)
         if student_command == "2": # become lead student
             student.evolution()
             exit()
@@ -272,6 +276,8 @@ elif val[1] == 'lead':
           "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
           "\n8.Sent Proposal."
           "\n9.Sent Completed Project."
+          "\n10.Ask Advisor a question."
+          "\n11.See reply from Advisor."
           "\n0.Exit the Program")
 
     lead_command = input("\nType command number in this line: ")
@@ -317,18 +323,27 @@ elif val[1] == 'lead':
              lead.check_responded()
 
         if lead_command == "8": # sent proposal
-             lead.sent_project_to_advisor("Pending Proposal")
+             lead.sent_project_to_advisor()
 
         if lead_command == "9": # sent complete project
-             lead.sent_project_to_advisor("Pending")
-        print("--------------------------------------------------------------------------------------")
+             lead.sent_project_to_advisor()
 
+        if lead_command == "10":
+            lead.ask_advisor()
+
+        if lead_command == "11":
+            lead.see_reply()
+        print("--------------------------------------------------------------------------------------")
 
         print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
               "\n2.See your project info."
               "\n3.Check if your project ready to solicit an advisor."
               "\n4.Change value of project table in Database."
               "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+              "\n8.Sent Proposal."
+              "\n9.Sent Completed Project."
+              "\n10.Ask Advisor a question."
+              "\n11.See reply from Advisor."
               "\n0.Exit the Program")
         lead_command = input("Type command number in this line: ")
 
@@ -376,6 +391,9 @@ elif val[1] == 'advisor':
 
     if advisor_command == "3":
         advisor.pending()
+
+    if advisor_command == "4":
+        advisor.reply_question()
 
 # once everything is done, make a call to the exit function
 exit()
