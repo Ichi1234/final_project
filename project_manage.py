@@ -13,6 +13,9 @@ def initializing():
     # create an object to read all csv files that will serve as a persistent state for this program
     person_csv = read.input_csv_file("persons.csv")
     login_csv = read.input_csv_file("login.csv")
+    project_csv = read.input_csv_file("project.csv")
+    member_csv = read.input_csv_file("member.csv")
+    advisor_csv = read.input_csv_file("advisor.csv")
 
     # create all the corresponding tables for those csv files
     persons_table = Table('persons', person_csv)
@@ -20,10 +23,9 @@ def initializing():
 
     # login_table.update("7447677", 'password', '8887') ###TODO Test case for update method
     ###TODO make project table
-    project_table = Table("project", [])
-    advisor_pending_table = Table("advisor", [{'ProjectID' : ""
-                        , 'to_be_advisor': "", 'Response': "", 'Response_date': ""}])
-    member_pending_table = Table("member", [])
+    project_table = Table("project", project_csv)
+    advisor_pending_table = Table("advisor", advisor_csv)
+    member_pending_table = Table("member", member_csv)
     # see the guide how many tables are needed
 
     # add all these tables to the database

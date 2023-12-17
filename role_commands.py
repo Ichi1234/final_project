@@ -146,7 +146,7 @@ class Lead:
         #convert name to projectID
         for id_of_project in self.project_table.table:
             if id_of_project['Lead'] == self.name:
-                return  id_of_project['ProjectID']
+                return id_of_project['ProjectID']
     def see_pending(self):
 
         choose = input("See pending member or advisor? (M/A): ")
