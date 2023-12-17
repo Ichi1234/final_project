@@ -143,12 +143,12 @@ if val[1] == 'admin':
    admin = Admin(db)
    print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
         "\n2.See specific table in Database\n3.Change value of the table in Database."
-         "\n4.Remove value from Database.\n5.Exit the program.\n")
+         "\n4.Remove value from Database.\n0.Exit the program.\n")
 
    admin_command = input("Type command number in this line: ")
    print()
 
-   while admin_command != "5": #Escape from program:
+   while admin_command != "0": #Escape from program:
        #Check what admin want to do
        if admin_command == "1": #user want to see every table
            admin.all_table()
@@ -193,7 +193,7 @@ if val[1] == 'admin':
        print("--------------------------------------------------------------------------------------")
        print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
              "\n2.See specific table in Database\n3.Change value of the table in Database."
-             "\n4.Remove value from Database.\n5.Exit the program.\n")
+             "\n4.Remove value from Database.\n0.Exit the program.\n")
 
        admin_command = input("Type command number in this line: ")
 
@@ -222,10 +222,10 @@ elif val[1] == 'lead':
           "\n3.Check if your project ready to solicit an advisor."
           "\n4.Change value of project table in Database."
           "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
-          "\n8.Exit the Program")
+          "\n0.Exit the Program")
 
     lead_command = input("\nType command number in this line: ")
-    while lead_command != "8":  # Escape from program:
+    while lead_command != "0":  # Escape from program:
 
         if lead_command == "1": # see pending request
             lead.see_pending()
@@ -261,7 +261,7 @@ elif val[1] == 'lead':
                 print("\nInvalid personID")
                 sent = input("Type correct ID")
             name_of_id = id_to_name(sent)
-            lead.sent_advisor_request(name_of_id)
+            print(lead.sent_advisor_request(name_of_id))
 
         if lead_command == "7": # see who respond the request
             lead.check_responded()
@@ -273,7 +273,7 @@ elif val[1] == 'lead':
               "\n3.Check if your project ready to solicit an advisor."
               "\n4.Change value of project table in Database."
               "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
-              "\n8.Exit the Program")
+              "\n0.Exit the Program")
         lead_command = input("Type command number in this line: ")
 
 # elif val[1] = 'faculty':

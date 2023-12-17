@@ -55,17 +55,22 @@ class Student:
                         print("This project already max.")
 
                     elif self.name in response['to_be_member'] and project_id == response['ProjectID']:
-                         if response['Response'] == "":
-                            response['Response'] += self.name + "," #accept move name to response
+                         if response['Response'] != "":
+                            response['Response'] += "," + self.name  #accept move name to response
                          else:
                             response['Response'] += self.name
 
                          # add name of member to project table
                          for member in self.database.search("project").table:
-                             if member['Member1'] != "None":
+                             if member['Member1'] == "None":
                                  member['Member1'] = self.name
                              else:
                                  member['Member2'] = self.name
+
+                        # change role to member
+                         for role in self.database.search("login").table:
+                            if role['username'] == self.name:
+                                role['role'] = "member"
 
 
 
@@ -224,37 +229,45 @@ class Lead:
     def sent_member_request(self, sent):
         for student in self.login.table:
             if student['username'] == sent and student['role'] != "student":
-                print("This persons already has project.")
-            else:
-               for pending in self.all_pending_member.table:
-                   if pending['ProjectID'] == self.id_project:
-                        if "," in pending['Response']:
-                            if len(pending['Response'].split(",")) >= 2: #check if user project full
-                                return "This project already full."
+                return "This person already has a project."
 
-                            else:
-                                pending['to_be_member'] += sent
-                                return "Request sent!"
-                        else:
-                            if pending['to_be_member'] == "":
-                                pending['to_be_member'] += sent + ","
-                            else:
-                                pending['to_be_member'] += "," + sent
+        for pending in self.all_pending_member.table:
+            if pending['ProjectID'] == self.id_project:
+                # Check if the user is already in the project or if a request has already been sent
+                if self.name == sent or self.name in pending['to_be_member'].split(",") or self.name in pending['Response'].split(","):
+                    return "You already sent a request to this person or this person is already in the project."
 
-                            return "Request sent!"
+                if sent in pending['to_be_member'].split(","):
+                    return "You already sent a request to this person."
+
+                if "," in pending['Response']:
+                    if len(pending['Response'].split(",")) >= 2:  # Check if the project is already full
+                        return "This project is already full."
+                    else:
+                        pending['to_be_member'] = f"{pending['to_be_member']},{sent}" if pending['to_be_member'] else sent
+                        return "Request sent!"
+                else:
+                    if pending['to_be_member'] == "":
+                        pending['to_be_member'] += sent
+                    else:
+                        pending['to_be_member'] += "," + sent
+
+                    return "Request sent!"
+
+        return "Request sent!"
 
     def sent_advisor_request(self, sent): ###TODO update to new value
         for advisor in self.login.table:
             if advisor['username'] == sent and advisor['role'] != "faculty":
-                print("This persons already has project.")
-            else:
-                for invite in self.project_table.table:
-                    if invite['ProjectID'] == self.id_project:
-                        for pending in self.all_advisor_member.table:
-                            if len(pending['Response']) >= 1 and len(pending['to_be_advisor']) >= 1:
-                                print("This already has pending advisor or already full.")
-                            else:
-                                pending['to_be_advisor'].append(sent)
+                return "This persons already has project."
+
+        for invite in self.all_pending_member.table:
+             if invite['ProjectID'] == self.id_project:
+                if len(invite['Response'].split()) >= 1 and len(invite['to_be_advisor'].split()) >= 1:
+                    return "This already has pending advisor or already full."
+                else:
+                    invite['to_be_advisor'] += sent
+                    return "Request sent!"
 
 
 
