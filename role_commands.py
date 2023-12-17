@@ -36,51 +36,54 @@ class Student:
     def pending_request(self): ###TODO wait for project table and then change role to member and add user to project table
         all_pending_member = self.database.search("member")
 
-        print("This is all of pending request that have you in.")
-        print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table)
-
-
-        student_choice = input("Do you want to 'Accept' or 'Deny'? ")
-
-        if student_choice == "Accept":
-
-            project_id = input("Input projectID that you want to accept: ")
-
-            #check projectID and update respond
-            for response in all_pending_member.table:
-                if len(response['Response']) >= 2:
-                    print("This project already max.")
-
-                elif self.name in response['to_be_member'] and project_id == response['ProjectID']:
-                     response['Response'].append(self.name) #accept move name to response
-
-
-            #after accept deny other project
-            for remove_everything in all_pending_member.table:
-                if self.name in remove_everything['to_be_member']:
-                    remove_everything['to_be_member'].remove(self.name)
-
+        my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
+        if not my_pending_member:
+            print("No one sent you request.")
         else:
+            print("This is all of pending request that have you in.")
+            print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table)
 
-            everything = input("Do you want to 'Deny' every project (Y/N): ")
+            student_choice = input("Do you want to 'Accept' or 'Deny'? ")
 
-            #delete every thing
-            if everything == "Y":
+            if student_choice == "Accept":
+
+                project_id = input("Input projectID that you want to accept: ")
+
+                #check projectID and update respond
+                for response in all_pending_member.table:
+                    if len(response['Response']) >= 2:
+                        print("This project already max.")
+
+                    elif self.name in response['to_be_member'] and project_id == response['ProjectID']:
+                         response['Response'].append(self.name) #accept move name to response
+
+
+                #after accept deny other project
                 for remove_everything in all_pending_member.table:
                     if self.name in remove_everything['to_be_member']:
                         remove_everything['to_be_member'].remove(self.name)
 
-            #delete only specific project
-            elif everything == "N":
-                project_id = input("Input projectID that you want to deny: ")
+            else:
 
-                for deny in all_pending_member.table:
-                    if self.name in deny['to_be_member'] and project_id == deny['ProjectID']:
-                        deny['to_be_member'].remove(self.name)
+                everything = input("Do you want to 'Deny' every project (Y/N): ")
+
+                #delete every thing
+                if everything == "Y":
+                    for remove_everything in all_pending_member.table:
+                        if self.name in remove_everything['to_be_member']:
+                            remove_everything['to_be_member'].remove(self.name)
+
+                #delete only specific project
+                elif everything == "N":
+                    project_id = input("Input projectID that you want to deny: ")
+
+                    for deny in all_pending_member.table:
+                        if self.name in deny['to_be_member'] and project_id == deny['ProjectID']:
+                            deny['to_be_member'].remove(self.name)
 
 
-        print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table) ###TODO delete this
-        print(all_pending_member) ###TODO delete this
+            print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table) ###TODO delete this
+            print(all_pending_member) ###TODO delete this
 
     def evolution(self):
         """Evolution from Student to Lead (create project) """
@@ -110,6 +113,11 @@ class Student:
         for i in range(4): project_id += str(randint(0, 9))  # add 4 digit to password variable
 
         title = input("What is the Project Title? ")
+
+        #change role to lead
+        for user in login_table.table:
+            if self.name == user['username']:
+                user['role'] = "lead"
 
         #insert new value to project table
         project_table.insert({'ProjectID': f"{project_id}", 'Title': f"{title}"
