@@ -39,18 +39,21 @@ def initializing():
 
 
 def check(table, key, user_value):
+    multiple = False
     for check_valid in table.table:
         if user_value == check_valid[key]:
-            return True
-        else:
-            return False
+            multiple = True
+
+    return multiple
+
 
 def check_key(table, key):
+    answer = False
     for check_keys in table.table:
-        if key not in [i for i in check_keys.keys()]:
-            return False
-        else:
-            return True
+        if key in [i for i in check_keys.keys()]:
+            answer = True
+
+    return answer
 def id_to_name(user_id):
     login_table = db.search("login")
     for i in login_table.table:
@@ -159,6 +162,8 @@ if val[1] == 'admin':
 
            #ID that user want to change
            person_id = input("Please insert the person id: ")
+           print(user_table)
+           print(check(user_table, "ID", person_id))
            while not check(user_table, "ID", person_id):
                print("\nPlease enter a valid person ID.")
                person_id = input("Insert the person id: ")

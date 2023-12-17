@@ -202,7 +202,7 @@ class Lead:
                             if len(eval(pending['Response'])) >= 2:
                                 print("This project already full.")
                             else:
-                                pending['to_be_member'] = sent
+                                pending['to_be_member'].append(sent)
 
     def sent_advisor_request(self, sent):
         for advisor in self.login.table:
@@ -215,7 +215,7 @@ class Lead:
                             if len(pending['Response']) >= 1 and len(pending['to_be_advisor']) >= 1:
                                 print("This already has pending advisor or already full.")
                             else:
-                                pending['to_be_advisor'] = sent
+                                pending['to_be_advisor'].append(sent)
 
 
 
