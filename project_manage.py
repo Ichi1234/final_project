@@ -207,22 +207,52 @@ elif val[1] == 'student':
     # see and do member related activities
 elif val[1] == 'lead':
 
-    project_table = db.search("project")
-    project_id = ""
-    for id_of_project in project_table.table:
-        if id_of_project['Lead'] == id_name:
-            project_id = id_of_project['ProjectID']
-
-    lead = Lead(db, id_name, project_id)
+    lead = Lead(db, id_name)
     # see and do lead related activities
     print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
-          "\n2.Solicit an advisor.\n3.Change value of project table in Database."
-          "\n4.See who responded to the request\n5.Sent member request.\n6.Sent advisor request.")
+          "\n2.Check if your project ready to solicit an advisor."
+          "\n3.Change value of project table in Database."
+          "\n4.See who responded to the request.\n5.Sent member request.\n6.Sent advisor request.")
 
     lead_command = input("\nType command number in this line: ")
 
-    if lead_command == "1":
-        pass
+    if lead_command == "1": # see pending request
+        lead.see_pending()
+
+    if lead_command == "2": # is project ready to solicit an advisor
+        lead.solicit_or_not()
+
+    if lead_command == "3": # change value in project table
+        user_change = input("What key do you want to change?")
+        while not check_key(db.search("project"), user_change):
+            print("\nPlease enter a valid key.")
+            user_change = input("Insert valid key: ")
+
+        lead.change_value_of_project(user_change)
+
+    if lead_command == "4": # see who respond the request
+        lead.check_responded()
+
+    if lead_command == "5": # sent member request
+
+        sent = input("What is the personID you want to sent request.")
+        while not check(db.search("login"), "ID", sent):
+            print("\nInvalid personID")
+            sent = input("Type correct ID")
+        name_of_id = id_to_name(sent)
+        lead.sent_member_request(name_of_id)
+
+    if lead_command == "6": # sent advisor request
+
+        sent = input("What is the personID you want to sent request.")
+        while not check(db.search("login"), "ID", sent):
+            print("\nInvalid personID")
+            sent = input("Type correct ID")
+        name_of_id = id_to_name(sent)
+        lead.sent_advisor_request(name_of_id)
+
+
+
 
 # elif val[1] = 'faculty':
     # see and do faculty related activities
