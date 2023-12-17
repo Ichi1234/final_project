@@ -184,7 +184,7 @@ class Student:
         advisor_ask.insert({'ProjectID': f"{project_id}", 'Lead': f"{self.name}",
                             'Question': "", 'Reply': "", 'Pending': "0", 'Advisor': ""})
 
-        print(f"This is your projectID: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
+        print(f"This is your project table: {project_table.filter(lambda x: x['Lead'] == self.name).table}")
 
 
 class Lead:
@@ -280,8 +280,9 @@ class Lead:
 
     def sent_advisor_request(self, sent): ###TODO update to new value
         for advisor in self.login.table:
-            if advisor['username'] == sent and advisor['role'] != "faculty":
-                return "This persons already has project."
+            if advisor['username'] == sent:
+               if advisor['role'] != "faculty" and advisor['role'] != "Advisor":
+                  return "This persons isn't a faculty has project."
         for member in self.all_pending_member.table:
             if member['to_be_member'] != "":
                 return "Your Project still have pending members."
@@ -323,7 +324,7 @@ class Faculty:
         self.database = database
         self.name = name
 
-    def pending_request(self, exit_function):
+    def pending_request(self, exit_function, time):
         all_pending_advisor = self.database.search("advisor")
 
         my_pending_advisor = all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table
@@ -355,7 +356,13 @@ class Faculty:
                          for add_advisor in self.database.search("question").table:
                               add_advisor['Advisor'] = self.name
 
-                        # change role to advisor
+                         # add date time to date response
+                         for date in self.database.search("advisor").table:
+                              if self.name in date['to_be_advisor'].split(","):
+                                 date['Response_date'] += str(time.today())
+
+
+                         # change role to advisor
                          for role in self.database.search("login").table:
                              if role['username'] == self.name:
                                  role['role'] = "advisor"

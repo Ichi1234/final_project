@@ -360,7 +360,7 @@ elif val[1] == 'faculty':
     while faculty_command != "0":
 
         if faculty_command == "1":
-            print(faculty.pending_request(exit))
+            print(faculty.pending_request(exit, date))
 
         if faculty_command == "2":
             print(faculty.all_project())
@@ -382,18 +382,27 @@ elif val[1] == 'advisor':
           "\n0.Exit the program")
 
     advisor_command = input("\nType command number in this line: ")
+    while advisor_command != "0":
+        if advisor_command == "1":
+            print(advisor.all_project())
 
-    if advisor_command == "1":
-        print(advisor.all_project())
+        if advisor_command == "2":
+            advisor.specific_project()
 
-    if advisor_command == "2":
-        advisor.specific_project()
+        if advisor_command == "3":
+            advisor.pending()
 
-    if advisor_command == "3":
-        advisor.pending()
+        if advisor_command == "4":
+            advisor.reply_question()
 
-    if advisor_command == "4":
-        advisor.reply_question()
+        print("--------------------------------------------------------------------------------------")
+        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+              "\n2.See details of your project."
+              "\n3.See pending request."
+              "\n4.See Student Question."
+              "\n0.Exit the program")
+
+        advisor_command = input("\nType command number in this line: ")
 
 # once everything is done, make a call to the exit function
 exit()
