@@ -129,303 +129,312 @@ def exit():
 # make calls to the initializing and login functions defined above
 
 initializing()
-print("Welcome to Senior project report.")
 print("--------------------------------------------------------------------------------------")
-menu = input("\nTo start the program press 1.\nTo exit press 0.")
+print("\nWelcome to Senior project report.")
+
+print("To start the program press 1.\nTo exit press 0.\n")
 print("--------------------------------------------------------------------------------------")
-while menu != 0:
+menu = input("\nType command number in this line: ")
+
+while menu != "0":
     val = login()
     #check is username and password correct
     if not val:
         print("Your Username or Password is wrong. Please try again next time")
-        print('"Git Gud"')
-        break
+        print('"Git Gud"\n')
 
-
-
-    # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
-    id_name = id_to_name(val[0])
-
-    if val[1] == 'admin':
-      # see and do admin related activities
-       print("--------------------------------------------------------------------------------------")
-       admin = Admin(db)
-       print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
-            "\n2.See specific table in Database\n3.Change value of the table in Database."
-             "\n4.Remove value from Database.\n0.Exit the program.\n")
-
-       admin_command = input("Type command number in this line: ")
-       print()
-
-       while admin_command != "0": #Escape from program:
-           #Check what admin want to do
-           if admin_command == "1": #user want to see every table
-               admin.all_table()
-
-           if admin_command == "2": #user want to see specific table
-               name_of_table = input("What is the table name? ")
-               admin.specific_table(name_of_table)
-
-           if admin_command == "3": #user want to change value
-               user_table = check_table()
-
-               #ID that user want to change
-               person_id = input("Please insert the person id: ")
-               print(user_table)
-               print(check(user_table, "ID", person_id))
-               while not check(user_table, "ID", person_id):
-                   print("\nPlease enter a valid person ID.")
-                   person_id = input("Insert the person id: ")
-
-               #key that user want to change
-               change_key = input("\nWhat key do you want to change? ")
-               while not check_key(user_table, change_key):
-                   print("\nPlease enter a valid key.")
-                   change_key = input("Insert valid key: ")
-
-               #new value
-               change_value = input("\nInsert new value: ")
-
-               #update table in database
-               update_table(user_table, person_id, change_key, change_value)
-
-           if admin_command == "4": #user want to remove someone
-               remove_table = check_table() #input table
-
-               #input person_ID
-               person_id = input("Please insert the person id: ")
-               while not check(remove_table, "ID", person_id):
-                   print("\nPlease enter a valid person ID.")
-                   person_id = input("Insert the person id: ")
-
-               admin.remove(person_id, remove_table)
-           print("--------------------------------------------------------------------------------------")
-           print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
-                 "\n2.See specific table in Database\n3.Change value of the table in Database."
-                 "\n4.Remove value from Database.\n0.Exit the program.\n")
-
-           admin_command = input("Type command number in this line: ")
-
-    elif val[1] == 'student':
-        student = Student(db, id_name)
         print("--------------------------------------------------------------------------------------")
-        # see and do student related activities
-        print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
-              "\n2.Become lead (Deny all request)"
-              "\n0.Exit Program")
-        student_command = input("\nType command number in this line: ")
-        print()
-        while student_command != "0":
-            if student_command == "1": # see pending requests
-                accept = student.pending_request(exit, date)
-                if accept == "Role change to Member please login again.":
-                    print(accept)
-                    break
-                else:
-                    print(accept)
-            if student_command == "2": # become lead student
-                student.evolution()
-                print("Role change to Leader please login again.")
-                exit()
-                break
+        print("\nWelcome to Senior project report.")
 
-            print("--------------------------------------------------------------------------------------")
-            print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
-                  "\n2.Become lead (Deny all request)"
-                  "\n0.Exit Program")
-            student_command = input("\nType command number in this line: ")
-
-    elif val[1] == 'member':
-        member = Member(db, id_name)
+        print("To start the program press 1.\nTo exit press 0.\n")
         print("--------------------------------------------------------------------------------------")
-        # see and do member related activities
-        print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
-              "\n2.See your project info"
-              "\n3.Change value of project table in Database"
-              "\n4.See who responded to the request.")
-        member_command = input("\nType command number in this line: ")
-        print()
+        menu = input("\nType command number in this line: ")
 
-        while member_command != "0":
+    else: #Username and pass word correct
 
-            if member_command == "1":
-                member.see_pending()
+            # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
+            id_name = id_to_name(val[0])
 
-            if member_command == "2":
-                member.your_project()
+            if val[1] == 'admin':
+              # see and do admin related activities
+               print("--------------------------------------------------------------------------------------")
+               admin = Admin(db)
+               print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
+                    "\n2.See specific table in Database\n3.Change value of the table in Database."
+                     "\n4.Remove value from Database.\n0.Exit the program.\n")
 
-            if member_command == "3":
-                user_change = input("What key do you want to change? ")
-                while not check_key(db.search("project"), user_change):
-                    print("\nPlease enter a valid key.")
-                    user_change = input("Insert valid key: ")
+               admin_command = input("Type command number in this line: ")
+               print()
 
-                member.change_value_of_project(user_change)
+               while admin_command != "0": #Escape from program:
+                   #Check what admin want to do
+                   if admin_command == "1": #user want to see every table
+                       admin.all_table()
 
-            if member_command == "4":
-                member.check_responded()
+                   if admin_command == "2": #user want to see specific table
+                       name_of_table = input("What is the table name? ")
+                       admin.specific_table(name_of_table)
 
+                   if admin_command == "3": #user want to change value
+                       user_table = check_table()
+
+                       #ID that user want to change
+                       person_id = input("Please insert the person id: ")
+                       print(user_table)
+                       print(check(user_table, "ID", person_id))
+                       while not check(user_table, "ID", person_id):
+                           print("\nPlease enter a valid person ID.")
+                           person_id = input("Insert the person id: ")
+
+                       #key that user want to change
+                       change_key = input("\nWhat key do you want to change? ")
+                       while not check_key(user_table, change_key):
+                           print("\nPlease enter a valid key.")
+                           change_key = input("Insert valid key: ")
+
+                       #new value
+                       change_value = input("\nInsert new value: ")
+
+                       #update table in database
+                       update_table(user_table, person_id, change_key, change_value)
+
+                   if admin_command == "4": #user want to remove someone
+                       remove_table = check_table() #input table
+
+                       #input person_ID
+                       person_id = input("Please insert the person id: ")
+                       while not check(remove_table, "ID", person_id):
+                           print("\nPlease enter a valid person ID.")
+                           person_id = input("Insert the person id: ")
+
+                       admin.remove(person_id, remove_table)
+                   print("--------------------------------------------------------------------------------------")
+                   print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
+                         "\n2.See specific table in Database\n3.Change value of the table in Database."
+                         "\n4.Remove value from Database.\n0.Exit the program.\n")
+
+                   admin_command = input("Type command number in this line: ")
+
+            elif val[1] == 'student':
+                student = Student(db, id_name)
+                print("--------------------------------------------------------------------------------------")
+                # see and do student related activities
+                print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
+                      "\n2.Become lead (Deny all request)"
+                      "\n0.Exit Program")
+                student_command = input("\nType command number in this line: ")
+                print()
+                while student_command != "0":
+                    if student_command == "1": # see pending requests
+                        accept = student.pending_request(exit, date)
+                        if accept == "Role change to Member please login again.":
+                            print(accept)
+                            break
+                        else:
+                            print(accept)
+                    if student_command == "2": # become lead student
+                        student.evolution()
+                        print("Role change to Leader please login again.")
+                        exit()
+                        break
+
+                    print("--------------------------------------------------------------------------------------")
+                    print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
+                          "\n2.Become lead (Deny all request)"
+                          "\n0.Exit Program")
+                    student_command = input("\nType command number in this line: ")
+
+            elif val[1] == 'member':
+                member = Member(db, id_name)
+                print("--------------------------------------------------------------------------------------")
+                # see and do member related activities
+                print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
+                      "\n2.See your project info"
+                      "\n3.Change value of project table in Database"
+                      "\n4.See who responded to the request.")
+                member_command = input("\nType command number in this line: ")
+                print()
+
+                while member_command != "0":
+
+                    if member_command == "1":
+                        member.see_pending()
+
+                    if member_command == "2":
+                        member.your_project()
+
+                    if member_command == "3":
+                        user_change = input("What key do you want to change? ")
+                        while not check_key(db.search("project"), user_change):
+                            print("\nPlease enter a valid key.")
+                            user_change = input("Insert valid key: ")
+
+                        member.change_value_of_project(user_change)
+
+                    if member_command == "4":
+                        member.check_responded()
+
+                    print("--------------------------------------------------------------------------------------")
+                    # see and do member related activities
+                    print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
+                          "\n2.See your project info"
+                          "\n3.Change value of project table in Database"
+                          "\n4.See who responded to the request."
+                          "\n0.Exit the Program")
+
+                    member_command = input("\nType command number in this line: ")
+
+            elif val[1] == 'lead':
+                print("--------------------------------------------------------------------------------------")
+
+                lead = Lead(db, id_name)
+                # see and do lead related activities
+                print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
+                      "\n2.See your project info."
+                      "\n3.Check if your project ready to solicit an advisor."
+                      "\n4.Change value of project table in Database."
+                      "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+                      "\n8.Sent Proposal."
+                      "\n9.Sent Completed Project."
+                      "\n10.Ask Advisor a question."
+                      "\n11.See reply from Advisor."
+                      "\n0.Exit the Program")
+
+                lead_command = input("\nType command number in this line: ")
+                while lead_command != "0":  # Escape from program:
+
+                    if lead_command == "1": # see pending request
+                        lead.see_pending()
+
+                    if lead_command == "2": # see your project detail
+                        lead.your_project()
+
+                    if lead_command == "3": # is project ready to solicit an advisor
+                        lead.solicit_or_not()
+
+                    if lead_command == "4": # change value in project table
+                        user_change = input("What key do you want to change? ")
+                        while not check_key(db.search("project"), user_change):
+                            print("\nPlease enter a valid key.")
+                            user_change = input("Insert valid key: ")
+
+                        lead.change_value_of_project(user_change)
+
+
+                    if lead_command == "5": # sent member request
+
+                        sent = input("What is the personID you want to sent request? ")
+                        while not check(db.search("login"), "ID", sent):
+                            print("\nInvalid personID")
+                            sent = input("Type correct ID ")
+                        name_of_id = id_to_name(sent)
+                        print(lead.sent_member_request(name_of_id))
+
+                    if lead_command == "6": # sent advisor request
+
+                        sent = input("What is the personID you want to sent request? ")
+                        while not check(db.search("login"), "ID", sent):
+                            print("\nInvalid personID")
+                            sent = input("Type correct ID ")
+                        name_of_id = id_to_name(sent)
+                        print(lead.sent_advisor_request(name_of_id))
+
+                    if lead_command == "7": # see who respond the request
+                         lead.check_responded()
+
+                    if lead_command == "8": # sent proposal
+                         lead.sent_project_to_advisor()
+
+                    if lead_command == "9": # sent complete project
+                         lead.sent_project_to_advisor()
+
+                    if lead_command == "10":
+                        lead.ask_advisor()
+
+                    if lead_command == "11":
+                        lead.see_reply()
+                    print("--------------------------------------------------------------------------------------")
+
+                    print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
+                          "\n2.See your project info."
+                          "\n3.Check if your project ready to solicit an advisor."
+                          "\n4.Change value of project table in Database."
+                          "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
+                          "\n8.Sent Proposal."
+                          "\n9.Sent Completed Project."
+                          "\n10.Ask Advisor a question."
+                          "\n11.See reply from Advisor."
+                          "\n0.Exit the Program")
+                    lead_command = input("Type command number in this line: ")
+
+            elif val[1] == 'faculty':
+                faculty = Faculty(db, id_name)
+                # see and do faculty related activities
+                print("--------------------------------------------------------------------------------------")
+                print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+                      "\n2.See details of all project."
+                      "\n0.Exit the program")
+
+                faculty_command = input("\nType command number in this line: ")
+
+                while faculty_command != "0":
+
+                    if faculty_command == "1":
+
+                        role_change = faculty.pending_request(exit, date)
+                        if role_change == "This project already max.":
+                             print(role_change)
+                        elif role_change == "Finished":
+                             print(role_change)
+                        elif role_change == "Role change to Advisor please login again.":
+                             print(role_change)
+                             break
+
+                    if faculty_command == "2":
+                          print(faculty.all_project())
+
+                    print("--------------------------------------------------------------------------------------")
+                    print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
+                          "\n2.See details of all project."
+                          "\n0.Exit the program")
+                    faculty_command = input("\nType command number in this line: ")
+
+            elif val[1] == 'advisor':
+                advisor = Advisor(db, id_name)
+                # see and do advisor related activities
+                print("--------------------------------------------------------------------------------------")
+                print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+                      "\n2.See details of your project."
+                      "\n3.See pending request."
+                      "\n4.See Student Question."
+                      "\n0.Exit the program")
+
+                advisor_command = input("\nType command number in this line: ")
+                while advisor_command != "0":
+                    if advisor_command == "1":
+                        print(advisor.all_project())
+
+                    if advisor_command == "2":
+                        advisor.specific_project()
+
+                    if advisor_command == "3":
+                        advisor.pending()
+
+                    if advisor_command == "4":
+                        advisor.reply_question()
+
+                    print("--------------------------------------------------------------------------------------")
+                    print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+                          "\n2.See details of your project."
+                          "\n3.See pending request."
+                          "\n4.See Student Question."
+                          "\n0.Exit the program")
+
+                    advisor_command = input("\nType command number in this line: ")
+
+            # once everything is done, make a call to the exit function
+            exit()
+            print("Welcome to Senior project report.")
             print("--------------------------------------------------------------------------------------")
-            # see and do member related activities
-            print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
-                  "\n2.See your project info"
-                  "\n3.Change value of project table in Database"
-                  "\n4.See who responded to the request."
-                  "\n0.Exit the Program")
-
-            member_command = input("\nType command number in this line: ")
-
-    elif val[1] == 'lead':
-        print("--------------------------------------------------------------------------------------")
-
-        lead = Lead(db, id_name)
-        # see and do lead related activities
-        print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
-              "\n2.See your project info."
-              "\n3.Check if your project ready to solicit an advisor."
-              "\n4.Change value of project table in Database."
-              "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
-              "\n8.Sent Proposal."
-              "\n9.Sent Completed Project."
-              "\n10.Ask Advisor a question."
-              "\n11.See reply from Advisor."
-              "\n0.Exit the Program")
-
-        lead_command = input("\nType command number in this line: ")
-        while lead_command != "0":  # Escape from program:
-
-            if lead_command == "1": # see pending request
-                lead.see_pending()
-
-            if lead_command == "2": # see your project detail
-                lead.your_project()
-
-            if lead_command == "3": # is project ready to solicit an advisor
-                lead.solicit_or_not()
-
-            if lead_command == "4": # change value in project table
-                user_change = input("What key do you want to change? ")
-                while not check_key(db.search("project"), user_change):
-                    print("\nPlease enter a valid key.")
-                    user_change = input("Insert valid key: ")
-
-                lead.change_value_of_project(user_change)
-
-
-            if lead_command == "5": # sent member request
-
-                sent = input("What is the personID you want to sent request? ")
-                while not check(db.search("login"), "ID", sent):
-                    print("\nInvalid personID")
-                    sent = input("Type correct ID ")
-                name_of_id = id_to_name(sent)
-                print(lead.sent_member_request(name_of_id))
-
-            if lead_command == "6": # sent advisor request
-
-                sent = input("What is the personID you want to sent request? ")
-                while not check(db.search("login"), "ID", sent):
-                    print("\nInvalid personID")
-                    sent = input("Type correct ID ")
-                name_of_id = id_to_name(sent)
-                print(lead.sent_advisor_request(name_of_id))
-
-            if lead_command == "7": # see who respond the request
-                 lead.check_responded()
-
-            if lead_command == "8": # sent proposal
-                 lead.sent_project_to_advisor()
-
-            if lead_command == "9": # sent complete project
-                 lead.sent_project_to_advisor()
-
-            if lead_command == "10":
-                lead.ask_advisor()
-
-            if lead_command == "11":
-                lead.see_reply()
+            menu = input("\nTo start the program press 1.\nTo exit press 0.")
             print("--------------------------------------------------------------------------------------")
-
-            print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
-                  "\n2.See your project info."
-                  "\n3.Check if your project ready to solicit an advisor."
-                  "\n4.Change value of project table in Database."
-                  "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
-                  "\n8.Sent Proposal."
-                  "\n9.Sent Completed Project."
-                  "\n10.Ask Advisor a question."
-                  "\n11.See reply from Advisor."
-                  "\n0.Exit the Program")
-            lead_command = input("Type command number in this line: ")
-
-    elif val[1] == 'faculty':
-        faculty = Faculty(db, id_name)
-        # see and do faculty related activities
-        print("--------------------------------------------------------------------------------------")
-        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
-              "\n2.See details of all project."
-              "\n0.Exit the program")
-
-        faculty_command = input("\nType command number in this line: ")
-
-        while faculty_command != "0":
-
-            if faculty_command == "1":
-
-                role_change = faculty.pending_request(exit, date)
-                if role_change == "This project already max.":
-                     print(role_change)
-                elif role_change == "Finished":
-                     print(role_change)
-                elif role_change == "Role change to Advisor please login again.":
-                     print(role_change)
-                     break
-
-            if faculty_command == "2":
-                  print(faculty.all_project())
-
-            print("--------------------------------------------------------------------------------------")
-            print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
-                  "\n2.See details of all project."
-                  "\n0.Exit the program")
-            faculty_command = input("\nType command number in this line: ")
-
-    elif val[1] == 'advisor':
-        advisor = Advisor(db, id_name)
-        # see and do advisor related activities
-        print("--------------------------------------------------------------------------------------")
-        print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
-              "\n2.See details of your project."
-              "\n3.See pending request."
-              "\n4.See Student Question."
-              "\n0.Exit the program")
-
-        advisor_command = input("\nType command number in this line: ")
-        while advisor_command != "0":
-            if advisor_command == "1":
-                print(advisor.all_project())
-
-            if advisor_command == "2":
-                advisor.specific_project()
-
-            if advisor_command == "3":
-                advisor.pending()
-
-            if advisor_command == "4":
-                advisor.reply_question()
-
-            print("--------------------------------------------------------------------------------------")
-            print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
-                  "\n2.See details of your project."
-                  "\n3.See pending request."
-                  "\n4.See Student Question."
-                  "\n0.Exit the program")
-
-            advisor_command = input("\nType command number in this line: ")
-
-    # once everything is done, make a call to the exit function
-    exit()
-    print("Welcome to Senior project report.")
-    print("--------------------------------------------------------------------------------------")
-    menu = input("\nTo start the program press 1.\nTo exit press 0.")
-    print("--------------------------------------------------------------------------------------")
