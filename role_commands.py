@@ -254,7 +254,7 @@ class Lead:
     def sent_member_request(self, sent):
         for student in self.login.table:
             if student['username'] == sent and student['role'] != "student":
-                return "This person already has a project."
+                return "This person already has a project or not a student."
 
         for pending in self.all_pending_member.table:
             if pending['ProjectID'] == self.id_project:
