@@ -44,7 +44,7 @@ class Student:
             print("This is all of pending request that have you in.")
             print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table)
 
-            student_choice = input("Do you want to 'Accept' or 'Deny'? ")
+            student_choice = input("Do you want to 'Accept' or 'Deny' or 'Exit'? ")
 
             if student_choice == "Accept":
 
@@ -87,14 +87,14 @@ class Student:
 
                                #remove user
                                new = remove_everything['to_be_member'].replace("," + self.name, "")\
-                                   .replace(self.name, "")
+                                   .replace(self.name + ",", "").replace(self.name, "")
 
                                remove_everything['to_be_member'] = new
 
 
                          return "Role change please login again." ###TODO test this
 
-            else:
+            elif student_choice == "Deny":
 
                 everything = input("Do you want to 'Deny' every project (Y/N): ")
 
@@ -102,7 +102,8 @@ class Student:
                 if everything == "Y":
                     for remove_everything in all_pending_member.table:
 
-                        new =remove_everything['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
+                        new =(remove_everything['to_be_member'].replace(","+ self.name, "")
+                              .replace(self.name + ",", "").replace(self.name, ""))
                         remove_everything['to_be_member'] = new
 
                 #delete only specific project
@@ -112,13 +113,18 @@ class Student:
                     for deny in all_pending_member.table:
                         if self.name in deny['to_be_member'] and project_id == deny['ProjectID']:
 
-                            new = deny['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
+                            new = deny['to_be_member'].replace(","+ self.name, "")\
+                                .replace(self.name + ",", "").replace(self.name, "")
                             deny['to_be_member'] = new
                 else:
                     return "Please enter valid command."
 
 
                 return "Finished"
+
+            else:
+                return "Return to Student Command."
+
 
     def evolution(self):
         """Evolution from Student to Lead (create project) """
@@ -140,7 +146,8 @@ class Student:
 
         for remove_everything in all_pending_member.table:
             if self.name in remove_everything['to_be_member']:
-                new = remove_everything['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
+                new = remove_everything['to_be_member'].replace(","+ self.name, "")\
+                    .replace(self.name + ",", "").replace(self.name, "")
                 remove_everything['to_be_member'] = new
 
         for change_role in login_table.table:
