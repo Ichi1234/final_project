@@ -83,11 +83,11 @@ class Student:
 
                          # after accept deny other project
                          for remove_everything in all_pending_member.table:
-                            if self.name in remove_everything['to_be_member']:
+                            if self.name in remove_everything['to_be_member'].split(","):
 
                                #remove user
-                               new = (remove_everything['to_be_member'].replace(","+ self.name, "")
-                                      .replace(self.name, ""))
+                               new = remove_everything['to_be_member'].replace("," + self.name, "")\
+                                   .replace(self.name, "")
 
 
                                remove_everything['to_be_member'] = new
