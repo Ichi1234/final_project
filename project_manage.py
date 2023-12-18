@@ -282,7 +282,8 @@ while menu != "0":
             print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
                   "\n2.See your project info"
                   "\n3.Change value of project table in Database"
-                  "\n4.See who responded to the request.")
+                  "\n4.See who responded to the request."
+                  "\n0.Exit the program")
             member_command = input("\nType command number in this line: ")
             # check if user insert invalid command number
             while member_command not in ["0", "1", "2", "3", "4"]:
@@ -464,8 +465,9 @@ while menu != "0":
             print("--------------------------------------------------------------------------------------")
             print("Welcome Advisor!\nWhat do you want to do today?\n\n1.See details of all project."
                   "\n2.See details of your project."
-                  "\n3.See pending request."
+                  "\n3.See approve pending request."
                   "\n4.See Student Question."
+                  "\n5.See pending to be advisor request."
                   "\n0.Exit the program")
 
             advisor_command = input("\nType command number in this line: ")
@@ -485,17 +487,22 @@ while menu != "0":
 
                 if advisor_command == "4":
                     advisor.reply_question()
+
+                if advisor_command == "5":
+                    advisor.pending_request()
+
                 print()
                 print("--------------------------------------------------------------------------------------")
                 print("Welcome Advisor!\nWhat do you want to do today?\n\n1.See details of all project."
                       "\n2.See details of your project."
-                      "\n3.See pending request."
+                      "\n3.See approve pending request."
                       "\n4.See Student Question."
+                      "\n5.See pending to be advisor request."
                       "\n0.Exit the program")
 
                 advisor_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
-                while advisor_command not in ["0", "1", "2", "3", "4"]:
+                while advisor_command not in ["0", "1", "2", "3", "4", "5"]:
                     advisor_command = input("\nPlease insert valid command number: ")
 
         # once everything is done, make a call to the exit function
