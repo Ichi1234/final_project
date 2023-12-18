@@ -137,7 +137,7 @@ def exit():
 
 
 initializing()
-print(db.search("login")) #You can uncomment this to see data in login table.
+# print(db.search("login")) #You can uncomment this to see data in login table.
 print()
 print("--------------------------------------------------------------------------------------")
 print("                    Welcome to Senior Project Report")
