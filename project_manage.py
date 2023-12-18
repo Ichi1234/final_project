@@ -257,6 +257,7 @@ while menu != "0":
                     accept = student.pending_request(date)
                     if accept == "Role change to Member please login again.":
                         print(accept)
+                        exit()
                         break
                     else:
                         print(accept)
@@ -429,7 +430,7 @@ while menu != "0":
 
                 if faculty_command == "1":
 
-                    role_change = faculty.pending_request(exit, date)
+                    role_change = faculty.pending_request(date)
                     if role_change == "This project already max.":
                         print(role_change)
                     elif role_change == "Finished":

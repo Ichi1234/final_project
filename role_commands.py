@@ -63,9 +63,9 @@ class Student:
 
                          # add name of member to project table
                          for member in self.database.search("project").table:
-                             if member['Member1'] == "None":
+                             if member['ProjectID'] == project_id and member['Member1'] == "None":
                                  member['Member1'] = self.name
-                             else:
+                             elif member['ProjectID'] == project_id and member['Member2'] == "None":
                                  member['Member2'] = self.name
 
                          # change role to member
@@ -92,7 +92,7 @@ class Student:
                                remove_everything['to_be_member'] = new
 
 
-                         return "Role change please login again." ###TODO test this
+                         return "Role change to Member please login again."
 
             elif student_choice == "Deny":
 
@@ -222,6 +222,8 @@ class Lead:
                if pending_advisor['ProjectID'] == self.id_project:
                    print("This is your pending advisor.")
                    print(self.all_advisor_member.filter(lambda x: self.id_project in x["ProjectID"]).table)
+        else:
+            print("Return to Lead command")
 
     def your_project(self):
         print("This is your project.")
@@ -243,12 +245,28 @@ class Lead:
                  print(f"\nThis is your project: {change}")
 
     def check_responded(self):
+        answer = ""
+
         for response in self.all_pending_member.table:
             if response['ProjectID'] == self.id_project:
                 if response['Response'] == "":
-                   print("No one response your request.")
+                   answer = ""
                 else:
-                   print(f"This is who accept the request {response['Response']}.")
+                   answer += response['Response']
+
+        for advisor in self.all_advisor_member.table:
+            if advisor['ProjectID'] == self.id_project:
+                if advisor['Response'] == "" and answer == "":
+                    answer = ""
+                else:
+                    if answer == "":
+                        answer += advisor['Response']
+                    else:
+                        answer += "," + advisor['Response']
+        if answer == "":
+            print("No one response your request.")
+        else:
+            print(f"This is who accept the request {answer}")
 
     def sent_member_request(self, sent):
         for student in self.login.table:
@@ -283,7 +301,7 @@ class Lead:
     def sent_advisor_request(self, sent): ###TODO update to new value
         for advisor in self.login.table:
             if advisor['username'] == sent:
-               if advisor['role'] != "faculty" and advisor['role'] != "Advisor":
+               if advisor['role'] != "faculty" and advisor['role'] != "advisor":
                   return "This persons isn't a faculty."
         for member in self.all_pending_member.table:
             if member['to_be_member'] != "":
@@ -405,6 +423,9 @@ class Faculty:
                     for deny in all_pending_advisor.table:
                         if self.name in deny['to_be_advisor'] and project_id == deny['ProjectID']:
                             deny['to_be_advisor'] = ""
+
+                else:
+                    print("Return to Lead command")
 
                 return "Finished"
 
