@@ -254,7 +254,7 @@ while menu != "0":
 
             while student_command != "0":
                 if student_command == "1":  # see pending requests
-                    accept = student.pending_request(exit, date)
+                    accept = student.pending_request(date)
                     if accept == "Role change to Member please login again.":
                         print(accept)
                         break

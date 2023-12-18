@@ -34,7 +34,7 @@ class Student:
         self.name = name
 
 
-    def pending_request(self, dict_to_csv, time):
+    def pending_request(self, time):
         all_pending_member = self.database.search("member")
 
         my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
@@ -89,11 +89,9 @@ class Student:
                                new = remove_everything['to_be_member'].replace("," + self.name, "")\
                                    .replace(self.name, "")
 
-
                                remove_everything['to_be_member'] = new
 
 
-                         dict_to_csv()
                          return "Role change please login again." ###TODO test this
 
             else:
@@ -331,7 +329,7 @@ class Faculty:
         self.database = database
         self.name = name
 
-    def pending_request(self, exit_function, time):
+    def pending_request(self, time):
         all_pending_advisor = self.database.search("advisor")
 
         my_pending_advisor = all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table
@@ -381,7 +379,6 @@ class Faculty:
 
 
                          print("Accepted.")
-                         exit_function() #tranform dict to csv
                          return "Role change to Advisor please login again."
 
             else:
