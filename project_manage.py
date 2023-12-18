@@ -50,7 +50,11 @@ def check(table, key, user_value):
 
     return multiple
 
-
+def destroy_pending_member():
+    target = db.search("member")
+    for eliminate in target.table:
+         if len(eliminate['Response'].split(",")) >= 2:
+              eliminate['to_be_member'] = ""
 def check_key(table, key):
     answer = False
     for check_keys in table.table:
@@ -129,6 +133,7 @@ def exit():
 # make calls to the initializing and login functions defined above
 
 initializing()
+print()
 print("--------------------------------------------------------------------------------------")
 print("\nWelcome to Senior project report.")
 
@@ -160,9 +165,10 @@ while menu != "0":
 
             # based on the return value for login, activate the code that performs activities according to the role defined for that person_id
             id_name = id_to_name(val[0])
-
+            destroy_pending_member()
             if val[1] == 'admin':
               # see and do admin related activities
+
                print("--------------------------------------------------------------------------------------")
                admin = Admin(db)
                print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
@@ -217,6 +223,7 @@ while menu != "0":
                            person_id = input("Insert the person id: ")
 
                        admin.remove(person_id, remove_table)
+                   print()
                    print("--------------------------------------------------------------------------------------")
                    print("Hi Admin!\nWhat do you want to do today?\n\n1.See all table in Database."
                          "\n2.See specific table in Database\n3.Change value of the table in Database."
@@ -226,6 +233,7 @@ while menu != "0":
 
             elif val[1] == 'student':
                 student = Student(db, id_name)
+
                 print("--------------------------------------------------------------------------------------")
                 # see and do student related activities
                 print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
@@ -250,7 +258,7 @@ while menu != "0":
                         print("Role change to Leader please login again.")
                         exit()
                         break
-
+                    print()
                     print("--------------------------------------------------------------------------------------")
                     print("Welcome student!\nWhat do you want to do today?\n\n1.See pending requests."
                           "\n2.Become lead (Deny all request)"
@@ -259,6 +267,7 @@ while menu != "0":
 
             elif val[1] == 'member':
                 member = Member(db, id_name)
+
                 print("--------------------------------------------------------------------------------------")
                 # see and do member related activities
                 print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
@@ -288,7 +297,7 @@ while menu != "0":
 
                     if member_command == "4":
                         member.check_responded()
-
+                    print()
                     print("--------------------------------------------------------------------------------------")
                     # see and do member related activities
                     print("Welcome Member!\nWhat do you want to do today?\n\n1.See pending requests."
@@ -307,7 +316,7 @@ while menu != "0":
                 print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
                       "\n2.See your project info."
                       "\n3.Check if your project ready to solicit an advisor."
-                      "\n4.Change value of project table in Database."
+                      "\n4.Change title of project"
                       "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
                       "\n8.Sent Proposal."
                       "\n9.Sent Completed Project."
@@ -331,13 +340,12 @@ while menu != "0":
                     if lead_command == "3": # is project ready to solicit an advisor
                         lead.solicit_or_not()
 
-                    if lead_command == "4": # change value in project table
-                        user_change = input("What key do you want to change? ")
-                        while not check_key(db.search("project"), user_change):
-                            print("\nPlease enter a valid key.")
-                            user_change = input("Insert valid key: ")
+                    if lead_command == "4": # change Title in project table
 
-                        lead.change_value_of_project(user_change)
+                        sure = input("Are you sure you want to change your project title? (Y/N) ")
+                        if sure == "Y":
+                            lead.change_value_of_project("Title")
+
 
 
                     if lead_command == "5": # sent member request
@@ -372,6 +380,7 @@ while menu != "0":
 
                     if lead_command == "11":
                         lead.see_reply()
+                    print()
                     print("--------------------------------------------------------------------------------------")
 
                     print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
@@ -415,6 +424,7 @@ while menu != "0":
                     if faculty_command == "2":
                           print(faculty.all_project())
 
+                    print()
                     print("--------------------------------------------------------------------------------------")
                     print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See pending requests."
                           "\n2.See details of all project."
@@ -448,7 +458,7 @@ while menu != "0":
 
                     if advisor_command == "4":
                         advisor.reply_question()
-
+                    print()
                     print("--------------------------------------------------------------------------------------")
                     print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
                           "\n2.See details of your project."
@@ -460,6 +470,7 @@ while menu != "0":
 
             # once everything is done, make a call to the exit function
             exit()
+            print()
             print("--------------------------------------------------------------------------------------")
             print("\nWelcome to Senior project report.")
 

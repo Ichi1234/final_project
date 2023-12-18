@@ -39,7 +39,7 @@ class Student:
 
         my_pending_member = all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table
         if not my_pending_member:
-            print("No one sent you request.")
+            return  "No one sent your request."
         else:
             print("This is all of pending request that have you in.")
             print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table)
@@ -214,20 +214,23 @@ class Lead:
 
             for pending_member in self.all_pending_member.table:
                 if pending_member['ProjectID'] == self.id_project:
+                    print("This is your pending member.")
                     print(self.all_pending_member.filter(lambda x: self.id_project in x["ProjectID"]).table)
 
         elif choose == "A":
 
             for pending_advisor in self.all_advisor_member.table:
                if pending_advisor['ProjectID'] == self.id_project:
+                   print("This is your pending advisor.")
                    print(self.all_advisor_member.filter(lambda x: self.id_project in x["ProjectID"]).table)
 
     def your_project(self):
+        print("This is your project.")
         print(self.project_table.filter(lambda x: self.id_project in x["ProjectID"]).table)
     def solicit_or_not(self):
         for check in self.all_pending_member.table:
 
-            if len(check['Response'].split(",")) == 2 and check['ProjectID'] == self.id_project:
+            if len(check['to_be_member'].split(",")) >= 1 and check['ProjectID'] == self.id_project:
                 print("This project is ready to solicit an advisor.\n")
             else:
                 print("This project still have pending member.\n")
@@ -238,6 +241,7 @@ class Lead:
             if change['ProjectID'] == self.id_project:
                  #check if is it user project?
                  change[want] = new_value
+                 print(f"\nThis is your project: {change}")
 
     def check_responded(self):
         for response in self.all_pending_member.table:
@@ -281,7 +285,7 @@ class Lead:
         for advisor in self.login.table:
             if advisor['username'] == sent:
                if advisor['role'] != "faculty" and advisor['role'] != "Advisor":
-                  return "This persons isn't a faculty has project."
+                  return "This persons isn't a faculty."
         for member in self.all_pending_member.table:
             if member['to_be_member'] != "":
                 return "Your Project still have pending members."
@@ -297,22 +301,32 @@ class Lead:
          # change project status
          for sent in self.project_table.table:
               if sent['Lead'] == self.name:
-                  sent['Status'] = "Pending"
+                  if sent['Advisor'] == "None":
+                      print("Your project doesn't has Advisor! ")
+                  else:
+                      sent['Status'] = "Pending"
 
     def ask_advisor(self):
-        user_question = input("Insert your question. ")
+
         for question in self.question.table:
             if question['Lead'] == self.name:
-               question['Question'] = user_question
+                if question['Advisor'] == "None":
+                    print("Your project doesn't has Advisor! ")
+                else:
+                    user_question = input("Insert your question. ")
+                    question['Question'] = user_question
 
     def see_reply(self):
         for question in self.question.table:
             if question['Lead'] == self.name:
-               if question['Reply'] == "":
-                   print("Advisor still not answer your question.")
-               else:
-                   print(f"Your question is {question['Question']}.")
-                   print(f"This is the answer {question['Reply']}")
+                if question['Advisor'] == "None":
+                    print("Your project doesn't has Advisor! ")
+                else:
+                   if question['Reply'] == "":
+                       print("Advisor still not answer your question.")
+                   else:
+                       print(f"Your question is {question['Question']}.")
+                       print(f"This is the answer {question['Reply']}")
 
 class Member(Lead):
     def __init__(self, database, user_name):
