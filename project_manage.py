@@ -136,6 +136,9 @@ print("To start the program press 1.\nTo exit press 0.\n")
 print("--------------------------------------------------------------------------------------")
 menu = input("\nType command number in this line: ")
 
+while int(menu) < 0 or int(menu) > 1:
+    menu = input("\nPlease insert valid command number: ")
+
 while menu != "0":
     val = login()
     #check is username and password correct
@@ -149,6 +152,9 @@ while menu != "0":
         print("To start the program press 1.\nTo exit press 0.\n")
         print("--------------------------------------------------------------------------------------")
         menu = input("\nType command number in this line: ")
+
+        while int(menu) < 0 or int(menu) > 1:
+            menu = input("\nPlease insert valid command number: ")
 
     else: #Username and pass word correct
 
@@ -164,7 +170,10 @@ while menu != "0":
                      "\n4.Remove value from Database.\n0.Exit the program.\n")
 
                admin_command = input("Type command number in this line: ")
-               print()
+
+               # check if user insert invalid command number
+               while int(admin_command) < 0 or int(admin_command) > 4:
+                   admin_command = input("\nPlease insert valid command number: ")
 
                while admin_command != "0": #Escape from program:
                    #Check what admin want to do
@@ -223,7 +232,11 @@ while menu != "0":
                       "\n2.Become lead (Deny all request)"
                       "\n0.Exit Program")
                 student_command = input("\nType command number in this line: ")
-                print()
+                # check if user insert invalid command number
+                while int(student_command) < 0 or int(student_command) > 2:
+                    student_command = input("\nPlease insert valid command number: ")
+
+
                 while student_command != "0":
                     if student_command == "1": # see pending requests
                         accept = student.pending_request(exit, date)
@@ -253,7 +266,9 @@ while menu != "0":
                       "\n3.Change value of project table in Database"
                       "\n4.See who responded to the request.")
                 member_command = input("\nType command number in this line: ")
-                print()
+                # check if user insert invalid command number
+                while int(member_command) < 0 or int(member_command) > 4:
+                    member_command = input("\nPlease insert valid command number: ")
 
                 while member_command != "0":
 
@@ -301,6 +316,10 @@ while menu != "0":
                       "\n0.Exit the Program")
 
                 lead_command = input("\nType command number in this line: ")
+                # check if user insert invalid command number
+                while int(lead_command) < 0 or int(lead_command) > 11:
+                    lead_command = input("\nPlease insert valid command number: ")
+
                 while lead_command != "0":  # Escape from program:
 
                     if lead_command == "1": # see pending request
@@ -376,6 +395,9 @@ while menu != "0":
                       "\n0.Exit the program")
 
                 faculty_command = input("\nType command number in this line: ")
+                # check if user insert invalid command number
+                while int(faculty_command) < 0 or int(faculty_command) > 2:
+                    faculty_command = input("\nPlease insert valid command number: ")
 
                 while faculty_command != "0":
 
@@ -410,6 +432,10 @@ while menu != "0":
                       "\n0.Exit the program")
 
                 advisor_command = input("\nType command number in this line: ")
+                # check if user insert invalid command number
+                while int(advisor_command) < 0 or int(advisor_command) > 4:
+                    advisor_command = input("\nPlease insert valid command number: ")
+
                 while advisor_command != "0":
                     if advisor_command == "1":
                         print(advisor.all_project())
@@ -434,7 +460,12 @@ while menu != "0":
 
             # once everything is done, make a call to the exit function
             exit()
-            print("Welcome to Senior project report.")
             print("--------------------------------------------------------------------------------------")
-            menu = input("\nTo start the program press 1.\nTo exit press 0.")
+            print("\nWelcome to Senior project report.")
+
+            print("To start the program press 1.\nTo exit press 0.\n")
             print("--------------------------------------------------------------------------------------")
+            menu = input("\nType command number in this line: ")
+
+            while int(menu) < 0 or int(menu) > 1:
+                menu = input("\nPlease insert valid command number: ")
