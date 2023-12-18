@@ -141,7 +141,7 @@ print("To start the program press 1.\nTo exit press 0.\n")
 print("--------------------------------------------------------------------------------------")
 menu = input("\nType command number in this line: ")
 
-while int(menu) < 0 or int(menu) > 1:
+while menu not in ["0", "1"]:
     menu = input("\nPlease insert valid command number: ")
 
 while menu != "0":
@@ -158,7 +158,7 @@ while menu != "0":
         print("--------------------------------------------------------------------------------------")
         menu = input("\nType command number in this line: ")
 
-        while int(menu) < 0 or int(menu) > 1:
+        while menu not in ["0", "1"]:
             menu = input("\nPlease insert valid command number: \n")
 
     else: #Username and pass word correct
@@ -178,7 +178,7 @@ while menu != "0":
                admin_command = input("Type command number in this line: ")
 
                # check if user insert invalid command number
-               while int(admin_command) < 0 or int(admin_command) > 4:
+               while admin_command not in ["0", "1", "2", "3", "4"]:
                    admin_command = input("\nPlease insert valid command number: \n")
 
                while admin_command != "0": #Escape from program:
@@ -230,6 +230,8 @@ while menu != "0":
                          "\n4.Remove value from Database.\n0.Exit the program.\n")
 
                    admin_command = input("Type command number in this line: ")
+                   while admin_command not in ["0", "1", "2", "3", "4"]:
+                       admin_command = input("\nPlease insert valid command number: \n")
 
             elif val[1] == 'student':
                 student = Student(db, id_name)
@@ -241,7 +243,7 @@ while menu != "0":
                       "\n0.Exit Program")
                 student_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
-                while int(student_command) < 0 or int(student_command) > 2:
+                while student_command not in ["0", "1", "2"]:
                     student_command = input("\nPlease insert valid command number: \n")
 
 
@@ -264,6 +266,8 @@ while menu != "0":
                           "\n2.Become lead (Deny all request)"
                           "\n0.Exit Program")
                     student_command = input("\nType command number in this line: ")
+                    while student_command not in ["0", "1", "2"]:
+                        student_command = input("\nPlease insert valid command number: \n")
 
             elif val[1] == 'member':
                 member = Member(db, id_name)
@@ -276,7 +280,7 @@ while menu != "0":
                       "\n4.See who responded to the request.")
                 member_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
-                while int(member_command) < 0 or int(member_command) > 4:
+                while member_command not in ["0", "1", "2", "3", "4"]:
                     member_command = input("\nPlease insert valid command number: \n")
 
                 while member_command != "0":
@@ -307,6 +311,9 @@ while menu != "0":
                           "\n0.Exit the Program")
 
                     member_command = input("\nType command number in this line: ")
+                    # check if user insert invalid command number
+                    while member_command not in ["0", "1", "2", "3", "4"]:
+                        member_command = input("\nPlease insert valid command number: \n")
 
             elif val[1] == 'lead':
                 print("--------------------------------------------------------------------------------------")
@@ -326,7 +333,7 @@ while menu != "0":
 
                 lead_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
-                while int(lead_command) < 0 or int(lead_command) > 11:
+                while lead_command not in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]:
                     lead_command = input("\nPlease insert valid command number: \n")
 
                 while lead_command != "0":  # Escape from program:
@@ -394,6 +401,9 @@ while menu != "0":
                           "\n11.See reply from Advisor."
                           "\n0.Exit the Program")
                     lead_command = input("Type command number in this line: ")
+                    while lead_command not in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]:
+                        lead_command = input("\nPlease insert valid command number: \n")
+
 
             elif val[1] == 'faculty':
                 faculty = Faculty(db, id_name)
@@ -405,7 +415,7 @@ while menu != "0":
 
                 faculty_command = input("\nType command number in this line: \n")
                 # check if user insert invalid command number
-                while int(faculty_command) < 0 or int(faculty_command) > 2:
+                while faculty_command not in ["0", "1", "2"]:
                     faculty_command = input("\nPlease insert valid command number: ")
 
                 while faculty_command != "0":
@@ -430,6 +440,8 @@ while menu != "0":
                           "\n2.See details of all project."
                           "\n0.Exit the program")
                     faculty_command = input("\nType command number in this line: ")
+                    while faculty_command not in ["0", "1", "2"]:
+                        faculty_command = input("\nPlease insert valid command number: ")
 
             elif val[1] == 'advisor':
                 advisor = Advisor(db, id_name)
@@ -443,7 +455,7 @@ while menu != "0":
 
                 advisor_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
-                while int(advisor_command) < 0 or int(advisor_command) > 4:
+                while advisor_command not in ["0", "1", "2", "3", "4"]:
                     advisor_command = input("\nPlease insert valid command number: \n")
 
                 while advisor_command != "0":
@@ -467,6 +479,9 @@ while menu != "0":
                           "\n0.Exit the program")
 
                     advisor_command = input("\nType command number in this line: ")
+                    # check if user insert invalid command number
+                    while advisor_command not in ["0", "1", "2", "3", "4"]:
+                        advisor_command = input("\nPlease insert valid command number: \n")
 
             # once everything is done, make a call to the exit function
             exit()
@@ -478,5 +493,5 @@ while menu != "0":
             print("--------------------------------------------------------------------------------------")
             menu = input("\nType command number in this line: ")
 
-            while int(menu) < 0 or int(menu) > 1:
+            while menu  not in ["0", "1"]:
                 menu = input("\nPlease insert valid command number: ")
