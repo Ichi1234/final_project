@@ -86,8 +86,9 @@ class Student:
                             if self.name in remove_everything['to_be_member']:
 
                                #remove user
-                               new = (remove_everything['to_be_member'].replace
-                                           (self.name, "").replace(",", ""))
+                               new = (remove_everything['to_be_member'].replace(","+ self.name, "")
+                                      .replace(self.name, ""))
+
 
                                remove_everything['to_be_member'] = new
 
@@ -102,14 +103,9 @@ class Student:
                 #delete every thing
                 if everything == "Y":
                     for remove_everything in all_pending_member.table:
-                        if "," in remove_everything['to_be_member']:
-                           new = (remove_everything['to_be_member'].replace
-                                  (self.name, "").replace(",", ""))
-                           remove_everything['to_be_member'] = new
 
-                        else:
-                            new =remove_everything['to_be_member'].replace(self.name, "")
-                            remove_everything['to_be_member'] = new
+                        new =remove_everything['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
+                        remove_everything['to_be_member'] = new
 
                 #delete only specific project
                 elif everything == "N":
@@ -117,13 +113,11 @@ class Student:
 
                     for deny in all_pending_member.table:
                         if self.name in deny['to_be_member'] and project_id == deny['ProjectID']:
-                            if "," in deny['to_be_member']:
-                                new = deny['to_be_member'].replace(self.name, "").replace(",", "")
-                                deny['to_be_member'] = new
 
-                            else:
-                                new = deny['to_be_member'].replace(self.name, "")
-                                deny['to_be_member'] = new
+                            new = deny['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
+                            deny['to_be_member'] = new
+                else:
+                    return "Please enter valid command."
 
 
                 return "Finished"
@@ -148,7 +142,7 @@ class Student:
 
         for remove_everything in all_pending_member.table:
             if self.name in remove_everything['to_be_member']:
-                new = remove_everything['to_be_member'].replace(self.name, "").replace(",", "")
+                new = remove_everything['to_be_member'].replace(","+ self.name, "").replace(self.name, "")
                 remove_everything['to_be_member'] = new
 
         for change_role in login_table.table:
@@ -236,7 +230,7 @@ class Lead:
                 print("This project still have pending member.\n")
 
     def change_value_of_project(self, want):
-        new_value = input("Change value to? ")
+        new_value = input("Change Title to? ")
         for change in self.project_table.table:
             if change['ProjectID'] == self.id_project:
                  #check if is it user project?

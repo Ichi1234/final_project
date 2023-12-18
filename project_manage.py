@@ -357,6 +357,10 @@ while menu != "0":
                     sure = input("Are you sure you want to change your project title? (Y/N) ")
                     if sure == "Y":
                         lead.change_value_of_project("Title")
+                    elif sure == "N":
+                        print("Return to Lead command.")
+                    else:
+                        print("Please insert valid answer.")
 
                 if lead_command == "5":  # sent member request
 
@@ -385,10 +389,10 @@ while menu != "0":
                 if lead_command == "9":  # sent complete project
                     lead.sent_project_to_advisor()
 
-                if lead_command == "10":
+                if lead_command == "10": # sent a question to advisor
                     lead.ask_advisor()
 
-                if lead_command == "11":
+                if lead_command == "11": # see advisor response a question
                     lead.see_reply()
                 print()
                 print("--------------------------------------------------------------------------------------")
@@ -396,7 +400,7 @@ while menu != "0":
                 print("Welcome Leader!\nWhat do you want to do today?\n\n1.See pending requests."
                       "\n2.See your project info."
                       "\n3.Check if your project ready to solicit an advisor."
-                      "\n4.Change value of project table in Database."
+                      "\n4.Change title of project"
                       "\n5.Sent member request.\n6.Sent advisor request.\n7.See who responded to the request."
                       "\n8.Sent Proposal."
                       "\n9.Sent Completed Project."
