@@ -310,7 +310,7 @@ class Lead:
 
         for question in self.question.table:
             if question['Lead'] == self.name:
-                if question['Advisor'] == "None":
+                if question['Advisor'] == "":
                     print("Your project doesn't has Advisor! ")
                 else:
                     user_question = input("Insert your question. ")
