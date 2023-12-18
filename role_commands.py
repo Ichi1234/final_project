@@ -412,6 +412,10 @@ class Faculty:
                              if role['username'] == self.name:
                                  role['role'] = "advisor"
 
+                         for deny in all_pending_advisor.table:
+                             if self.name in deny['to_be_advisor'] and project_id == deny['ProjectID']:
+                                 deny['to_be_advisor'] = ""
+
 
 
 
