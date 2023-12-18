@@ -298,12 +298,13 @@ while menu != "0":
                     member.your_project()
 
                 if member_command == "3":
-                    user_change = input("What key do you want to change? ")
-                    while not check_key(db.search("project"), user_change):
-                        print("\nPlease enter a valid key.")
-                        user_change = input("Insert valid key: ")
-
-                    member.change_value_of_project(user_change)
+                    sure = input("Are you sure you want to change your project title? (Y/N) ")
+                    if sure == "Y":
+                        member.change_value_of_project("Title")
+                    elif sure == "N":
+                        print("Return to Lead command.")
+                    else:
+                        print("Please insert valid answer.")
 
                 if member_command == "4":
                     member.check_responded()
@@ -421,7 +422,7 @@ while menu != "0":
                   "\n2.See details of all project."
                   "\n0.Exit the program")
 
-            faculty_command = input("\nType command number in this line: \n")
+            faculty_command = input("\nType command number in this line: ")
             # check if user insert invalid command number
             while faculty_command not in ["0", "1", "2"]:
                 faculty_command = input("\nPlease insert valid command number: ")
@@ -436,6 +437,7 @@ while menu != "0":
                     elif role_change == "Finished":
                         print(role_change)
                     elif role_change == "Role change to Advisor please login again.":
+                        exit()
                         print(role_change)
                         break
 
@@ -455,7 +457,7 @@ while menu != "0":
             advisor = Advisor(db, id_name)
             # see and do advisor related activities
             print("--------------------------------------------------------------------------------------")
-            print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+            print("Welcome Advisor!\nWhat do you want to do today?\n\n1.See details of all project."
                   "\n2.See details of your project."
                   "\n3.See pending request."
                   "\n4.See Student Question."
@@ -480,7 +482,7 @@ while menu != "0":
                     advisor.reply_question()
                 print()
                 print("--------------------------------------------------------------------------------------")
-                print("Welcome Faculty!\nWhat do you want to do today?\n\n1.See details of all project."
+                print("Welcome Advisor!\nWhat do you want to do today?\n\n1.See details of all project."
                       "\n2.See details of your project."
                       "\n3.See pending request."
                       "\n4.See Student Question."

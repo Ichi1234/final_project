@@ -91,8 +91,7 @@ class Student:
 
                                remove_everything['to_be_member'] = new
 
-
-                         return "Role change to Member please login again."
+                    return "Role change to Member please login again."
 
             elif student_choice == "Deny":
 
@@ -122,8 +121,11 @@ class Student:
 
                 return "Finished"
 
-            else:
+            elif student_choice == "Exit":
                 return "Return to Student Command."
+
+            else:
+                return "Please enter valid command."
 
 
     def evolution(self):
@@ -298,19 +300,20 @@ class Lead:
 
         return "Request sent!"
 
-    def sent_advisor_request(self, sent): ###TODO update to new value
+    def sent_advisor_request(self, sent):
         for advisor in self.login.table:
             if advisor['username'] == sent:
                if advisor['role'] != "faculty" and advisor['role'] != "advisor":
                   return "This persons isn't a faculty."
         for member in self.all_pending_member.table:
-            if member['to_be_member'] != "":
-                return "Your Project still have pending members."
+            if member['ProjectID'] == self.id_project:
+               if member['to_be_member'] != "":
+                  return "Your Project still have pending members."
 
         for invite in self.all_advisor_member.table:
              if invite['ProjectID'] == self.id_project:
                 if len(invite['Response'].split()) >= 1 or len(invite['to_be_advisor'].split()) >= 1:
-                    return "This already has pending advisor or already full."
+                    return "This project already has pending advisor or already full."
                 else:
                     invite['to_be_advisor'] += sent
                     return "Request sent!"
@@ -348,7 +351,13 @@ class Lead:
 class Member(Lead):
     def __init__(self, database, user_name):
         super().__init__(database, user_name)
+        self.id_project = self.find_id()
+        self.name = user_name
 
+    def find_id(self):
+        for id in self.database.search("member").table:
+            if self.name in id['Response']:
+                return id['ProjectID']
 class Faculty:
     def __init__(self, database, name):
         self.database = database
@@ -364,7 +373,7 @@ class Faculty:
             print("This is all of pending request that have you in.")
             print(all_pending_advisor.filter(lambda x: self.name in x["to_be_advisor"]).table)
 
-            advisor_choice = input("Do you want to 'Accept' or 'Deny'? ")
+            advisor_choice = input("Do you want to 'Accept' or 'Deny' or 'Exit'? ")
 
             if advisor_choice == "Accept":
 
@@ -380,11 +389,13 @@ class Faculty:
 
                          # add name of advisor to project table
                          for advisor in self.database.search("project").table:
-                              advisor['Advisor'] = self.name
+                              if advisor['ProjectID'] == project_id:
+                                  advisor['Advisor'] = self.name
 
                          # add name of advisor to question table
                          for add_advisor in self.database.search("question").table:
-                              add_advisor['Advisor'] = self.name
+                             if add_advisor['ProjectID'] == project_id:
+                                 add_advisor['Advisor'] = self.name
 
                          # add date time to date response
                          for date in self.database.search("advisor").table:
@@ -397,16 +408,13 @@ class Faculty:
                              if role['username'] == self.name:
                                  role['role'] = "advisor"
 
-                         # after accept deny other project
-                         for remove_everything in all_pending_advisor.table:
-                             if self.name in remove_everything['to_be_advisor']:
-                                 remove_everything['to_be_advisor'] = ""
+
 
 
                          print("Accepted.")
                          return "Role change to Advisor please login again."
 
-            else:
+            elif advisor_choice == "Deny":
 
                 everything = input("Do you want to 'Deny' every project (Y/N): ")
 
@@ -428,6 +436,12 @@ class Faculty:
                     print("Return to Lead command")
 
                 return "Finished"
+
+            elif advisor_choice == "Exit":
+                return "Return to Student Command."
+
+            else:
+                return "Please enter valid command."
 
     def all_project(self):
         return self.database.search("project")
