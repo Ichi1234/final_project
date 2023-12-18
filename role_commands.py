@@ -93,7 +93,7 @@ class Student:
 
 
                          dict_to_csv()
-                         sys.exit()
+                         return "Role change please login again." ###TODO test this
 
             else:
 
@@ -126,8 +126,7 @@ class Student:
                                 deny['to_be_member'] = new
 
 
-            print(all_pending_member.filter(lambda x: self.name in x["to_be_member"]).table) ###TODO delete this
-            print(all_pending_member) ###TODO delete this
+                return "Finished"
 
     def evolution(self):
         """Evolution from Student to Lead (create project) """
@@ -375,7 +374,7 @@ class Faculty:
 
                          print("Accepted.")
                          exit_function() #tranform dict to csv
-                         sys.exit()
+                         return "Role change to Advisor please login again."
 
             else:
 
@@ -395,7 +394,7 @@ class Faculty:
                         if self.name in deny['to_be_advisor'] and project_id == deny['ProjectID']:
                             deny['to_be_advisor'] = ""
 
-                return ""
+                return "Finished"
 
     def all_project(self):
         return self.database.search("project")
