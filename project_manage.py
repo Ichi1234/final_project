@@ -392,7 +392,13 @@ while menu != "0":
                     lead.sent_project_to_advisor()
 
                 if lead_command == "10": # sent a question to advisor
-                    lead.ask_advisor()
+                    sure = input("Are you sure? New question will replace old question. (Y/N) ")
+                    if sure == "Y":
+                        lead.ask_advisor()
+                    elif sure == "N":
+                        print("Return to Lead Command")
+                    else:
+                        print("Please insert valid answer.")
 
                 if lead_command == "11": # see advisor response a question
                     lead.see_reply()

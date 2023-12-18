@@ -325,16 +325,20 @@ class Lead:
                       print("Your project doesn't has Advisor! ")
                   else:
                       sent['Status'] = "Pending"
+                      print("Send")
 
     def ask_advisor(self):
 
         for question in self.question.table:
             if question['Lead'] == self.name:
+                question['Question'] = ""
+                question['Reply'] = ""
                 if question['Advisor'] == "":
                     print("Your project doesn't has Advisor! ")
                 else:
                     user_question = input("Insert your question. ")
                     question['Question'] = user_question
+                    print("Send")
 
     def see_reply(self):
         for question in self.question.table:
@@ -345,8 +349,8 @@ class Lead:
                    if question['Reply'] == "":
                        print("Advisor still not answer your question.")
                    else:
-                       print(f"Your question is {question['Question']}.")
-                       print(f"This is the answer {question['Reply']}")
+                       print(f"Your question is '{question['Question']}'.")
+                       print(f"The answer is the '{question['Reply']}'")
 
 class Member(Lead):
     def __init__(self, database, user_name):
@@ -355,9 +359,9 @@ class Member(Lead):
         self.name = user_name
 
     def find_id(self):
-        for id in self.database.search("member").table:
-            if self.name in id['Response']:
-                return id['ProjectID']
+        for id_ku in self.database.search("member").table:
+            if self.name in id_ku['Response']:
+                return id_ku['ProjectID']
 class Faculty:
     def __init__(self, database, name):
         self.database = database
@@ -459,34 +463,60 @@ class Advisor:
         print(self.project_table.filter(lambda x: self.name in x["Advisor"]).table)
 
     def pending(self):
-        new_status = ""
-        for pending in self.question.table:
-            if pending['Lead'] == self.name:
-                if pending['Pending'] == "0":
-                    new_status = "Proposal Approve"
-                    increase = int(pending['Pending'])
-                    increase += 1
-                    pending['Pending'] = str(increase)
+        for check in self.project_table.table:
+            if check['Advisor'] == self.name and check['Status'] == "Pending":
+                print(self.project_table.filter(lambda x: self.name in x["Advisor"]).table)
+                approve = input("Do you want to approve? (Y/N): ")
+                if approve == "Y":
 
-                elif pending['Pending'] == "1":
-                    new_status = "Complete"
+                     project_id = input("Which project you want to approve? (insert ProjectID): ")
 
-        for approve in self.project_table.table:
-             if self.name in approve["Advisor"]:
-                 # check approve status
-                 approve["Status"] = new_status
+
+                     new_status = ""
+                     for pending in self.question.table:
+                        if pending['ProjectID'] == project_id:
+                            if pending['Pending'] == "0":
+                                new_status = "Proposal Approve"
+                                increase = int(pending['Pending'])
+                                increase += 1
+                                pending['Pending'] = str(increase)
+
+                            elif pending['Pending'] == "1":
+                                new_status = "Complete"
+
+                     for approve in self.project_table.table:
+                        if self.name in approve["Advisor"]:
+                        # check approve status
+                            approve["Status"] = new_status
+                     print("Finished")
+                     print("Return to Advisor command.")
+
+                elif approve == "N":
+                    print("Return to Advisor command.")
+                else:
+                    print("Please insert valid answer.")
+
+
+            else:
+                print("Student didn't sent the request.")
 
     def reply_question(self):
         for reply in self.question.table:
              if reply['Advisor'] == self.name:
                  if reply['Question'] != "":
                     print(reply['Question'])
+                    answer = input("Do you want to reply? (New reply will replace old reply) (Y/N): ")
+                    if answer == "Y":
+                        insert = input("Insert your answer. ")
+                        reply['Reply'] = insert
+                        print("Send")
+                    elif answer == "N":
+                        print("Return to Advisor Command.")
+                    else:
+                        print("Please insert valid command.")
                  else:
                     print("Student didn't ask your question.")
 
-                 answer = input("Do you want to reply? (Y/N): ")
-                 if answer == "Y":
-                     insert = input("Insert your answer. ")
-                     reply['Reply'] = insert
+
 
 
