@@ -507,9 +507,12 @@ class Advisor:
                     print(reply['Question'])
                     answer = input("Do you want to reply? (New reply will replace old reply) (Y/N): ")
                     if answer == "Y":
-                        insert = input("Insert your answer. ")
-                        reply['Reply'] = insert
-                        print("Send")
+                        project_id = input("What is the ProjectID? ")
+                        for i in self.question.table:
+                            if i['ProjectID'] == project_id:
+                                insert = input("Insert your answer. ")
+                                i['Reply'] = insert
+                                print("Send")
                     elif answer == "N":
                         print("Return to Advisor Command.")
                     else:
