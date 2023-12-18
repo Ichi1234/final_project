@@ -39,9 +39,6 @@ def initializing():
     db.insert(member_pending_table)
     db.insert(advisor_response_table)
 
-    print(login_table)  ###TODO delete this when finish everything
-
-
 def check(table, key, user_value):
     multiple = False
     for check_valid in table.table:
@@ -138,12 +135,14 @@ def exit():
 
 # make calls to the initializing and login functions defined above
 
+
 initializing()
+print(db.search("login")) #You can uncomment this to see data in login table.
 print()
 print("--------------------------------------------------------------------------------------")
-print("\nWelcome to Senior project report.")
+print("                    Welcome to Senior Project Report")
 
-print("To start the program press 1.\nTo exit press 0.\n")
+print("\n1.Start the program press \n0.Exit the program")
 print("--------------------------------------------------------------------------------------")
 menu = input("\nType command number in this line: ")
 
