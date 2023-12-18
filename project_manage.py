@@ -472,7 +472,7 @@ while menu != "0":
 
             advisor_command = input("\nType command number in this line: ")
             # check if user insert invalid command number
-            while advisor_command not in ["0", "1", "2", "3", "4"]:
+            while advisor_command not in ["0", "1", "2", "3", "4", "5"]:
                 advisor_command = input("\nPlease insert valid command number: ")
 
             while advisor_command != "0":
@@ -489,7 +489,15 @@ while menu != "0":
                     advisor.reply_question()
 
                 if advisor_command == "5":
-                    advisor.pending_request()
+                    role_change = advisor.pending_request(date)
+                    if role_change == "This project already max.":
+                        print(role_change)
+                    elif role_change == "Finished":
+                        print(role_change)
+                    elif role_change == "Role change to Advisor please login again.":
+                        exit()
+                        print(role_change)
+                        break
 
                 print()
                 print("--------------------------------------------------------------------------------------")
