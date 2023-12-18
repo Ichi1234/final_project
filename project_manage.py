@@ -154,7 +154,7 @@ while menu != "0":
         menu = input("\nType command number in this line: ")
 
         while int(menu) < 0 or int(menu) > 1:
-            menu = input("\nPlease insert valid command number: ")
+            menu = input("\nPlease insert valid command number: \n")
 
     else: #Username and pass word correct
 
@@ -173,7 +173,7 @@ while menu != "0":
 
                # check if user insert invalid command number
                while int(admin_command) < 0 or int(admin_command) > 4:
-                   admin_command = input("\nPlease insert valid command number: ")
+                   admin_command = input("\nPlease insert valid command number: \n")
 
                while admin_command != "0": #Escape from program:
                    #Check what admin want to do
@@ -234,7 +234,7 @@ while menu != "0":
                 student_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
                 while int(student_command) < 0 or int(student_command) > 2:
-                    student_command = input("\nPlease insert valid command number: ")
+                    student_command = input("\nPlease insert valid command number: \n")
 
 
                 while student_command != "0":
@@ -268,7 +268,7 @@ while menu != "0":
                 member_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
                 while int(member_command) < 0 or int(member_command) > 4:
-                    member_command = input("\nPlease insert valid command number: ")
+                    member_command = input("\nPlease insert valid command number: \n")
 
                 while member_command != "0":
 
@@ -318,7 +318,7 @@ while menu != "0":
                 lead_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
                 while int(lead_command) < 0 or int(lead_command) > 11:
-                    lead_command = input("\nPlease insert valid command number: ")
+                    lead_command = input("\nPlease insert valid command number: \n")
 
                 while lead_command != "0":  # Escape from program:
 
@@ -394,7 +394,7 @@ while menu != "0":
                       "\n2.See details of all project."
                       "\n0.Exit the program")
 
-                faculty_command = input("\nType command number in this line: ")
+                faculty_command = input("\nType command number in this line: \n")
                 # check if user insert invalid command number
                 while int(faculty_command) < 0 or int(faculty_command) > 2:
                     faculty_command = input("\nPlease insert valid command number: ")
@@ -434,7 +434,7 @@ while menu != "0":
                 advisor_command = input("\nType command number in this line: ")
                 # check if user insert invalid command number
                 while int(advisor_command) < 0 or int(advisor_command) > 4:
-                    advisor_command = input("\nPlease insert valid command number: ")
+                    advisor_command = input("\nPlease insert valid command number: \n")
 
                 while advisor_command != "0":
                     if advisor_command == "1":
